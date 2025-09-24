@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+sqlalchemy
+python-dotenv
+pydantic
+python-multipart
+PyPDF2
+openai
+requests
+transformers
+torch

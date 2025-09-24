@@ -1,214 +1,276 @@
-# AutoU - Classificação Inteligente de Emails
+# Auto Email AI
 
-Sistema de classificação automática de emails que utiliza Inteligência Artificial e Processamento de Linguagem Natural para categorizar emails como **Produtivo** ou **Improdutivo** e gerar respostas automáticas adequadas.
+Sistema inteligente de classificação e resposta automática de emails usando IA. Desenvolvido para automatizar o processamento de emails corporativos, classificando-os como produtivos ou improdutivos e gerando respostas automáticas contextuais.
 
-## 🚀 Tecnologias
+## Funcionalidades
 
-### Backend (Python)
-- **FastAPI** - Framework web moderno e rápido
+### **Classificação Inteligente**
+- **Análise por palavras-chave** organizadas por categorias
+- **Detecção de tópicos específicos** (reuniões, projetos, vendas, etc.)
+- **Classificação multilíngue** (português, inglês e outros idiomas)
+- **Sistema de pontuação** baseado na importância empresarial
+
+### **Respostas Automáticas**
+- **IA para geração dinâmica** (Hugging Face, Ollama)
+- **Templates organizados por categoria** como fallback
+- **Respostas contextualizadas** por tipo de email
+- **Tom corporativo profissional** em todas as respostas
+
+### **Arquitetura Robusta**
+- **Backend**: Python + FastAPI
+- **Frontend**: React + Vite
+- **Banco de dados**: MySQL/SQLite
+- **IA**: Hugging Face Inference API + Ollama
+- **Estrutura organizacional** profissional
+
+## Tecnologias
+
+### **Backend**
+- **Python 3.11+**
+- **FastAPI** - Framework web moderno
 - **SQLAlchemy** - ORM para banco de dados
-- **Transformers** - Modelos de IA para classificação
-- **OpenAI API** - Geração de respostas automáticas
-- **NLTK & spaCy** - Processamento de linguagem natural
-- **PyPDF2 & Textract** - Extração de texto de arquivos
+- **Pydantic** - Validação de dados
+- **Uvicorn** - Servidor ASGI
 
-### Frontend (React)
-- **React 18** - Biblioteca para interface de usuário
-- **Tailwind CSS** - Framework CSS utilitário
+### **Frontend**
+- **React 18**
+- **Vite** - Build tool rápido
+- **Tailwind CSS** - Framework CSS
 - **Axios** - Cliente HTTP
-- **Lucide React** - Ícones modernos
 
-## 📋 Funcionalidades
+### **IA e NLP**
+- **Hugging Face** - Modelos de IA gratuitos
+- **Ollama** - Modelos locais
+- **Classificação por palavras-chave** - Sistema próprio
+- **Prompts estruturados** - Respostas contextualizadas
 
-### Interface Web
-- ✅ Upload de arquivos (.txt, .pdf) ou inserção direta de texto
-- ✅ Interface moderna com efeitos visuais
-- ✅ Exibição de resultados com classificação e confiança
-- ✅ Respostas automáticas sugeridas
-- ✅ Histórico de classificações
-- ✅ Design responsivo
+### **Banco de Dados**
+- **MySQL** - Produção
+- **SQLite** - Desenvolvimento
+- **Docker** - Containerização
 
-### Backend
-- ✅ Processamento de emails em texto ou arquivo
-- ✅ Classificação usando IA (OpenAI + NLP)
-- ✅ Geração de respostas automáticas
-- ✅ Armazenamento em banco de dados
-- ✅ API RESTful completa
-- ✅ Soft delete para preservar histórico
-
-## 🛠️ Instalação e Configuração
-
-### Pré-requisitos
-- Python 3.8+
-- Node.js 16+
-- PostgreSQL (opcional, SQLite por padrão)
-
-### Backend
-
-1. **Navegue para o diretório do backend:**
-```bash
-cd backend
-```
-
-2. **Crie um ambiente virtual:**
-```bash
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate  # Windows
-```
-
-3. **Instale as dependências:**
-```bash
-pip install -r requirements.txt
-```
-
-4. **Configure as variáveis de ambiente:**
-```bash
-# Crie um arquivo .env baseado no .env.example
-cp .env.example .env
-```
-
-Edite o arquivo `.env`:
-```env
-DATABASE_URL=sqlite:///./autou.db
-SECRET_KEY=sua-chave-secreta-aqui
-DEBUG=True
-OPENAI_API_KEY=sua-chave-openai-aqui
-```
-
-5. **Execute o servidor:**
-```bash
-python main.py
-```
-
-O backend estará disponível em `http://localhost:8000`
-
-### Frontend
-
-1. **Navegue para o diretório do frontend:**
-```bash
-cd frontend
-```
-
-2. **Instale as dependências:**
-```bash
-npm install
-```
-
-3. **Execute o servidor de desenvolvimento:**
-```bash
-npm start
-```
-
-O frontend estará disponível em `http://localhost:3000`
-
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
-Case-AutoU/
-├── backend/
-│   ├── config/
-│   │   └── database.py          # Configuração do banco
-│   ├── models/
-│   │   ├── email.py            # Modelo Email
-│   │   └── classification.py   # Modelo Classification
-│   ├── schemas/
-│   │   ├── email.py            # Schemas Pydantic
-│   │   └── classification.py
-│   ├── services/
-│   │   ├── email_service.py    # Lógica de negócio
-│   │   ├── classification_service.py
-│   │   ├── nlp_service.py      # Processamento NLP
-│   │   ├── ai_service.py       # Integração IA
-│   │   └── file_service.py     # Processamento arquivos
-│   ├── controllers/
-│   │   └── email_controller.py # Rotas da API
-│   ├── main.py                 # Aplicação principal
-│   └── requirements.txt
-├── frontend/
+auto-email-ai/
+├── backend/                    # Backend Python
+│   ├── data/                   # Dados estáticos organizados
+│   │   ├── keywords/           # Palavras-chave por categoria
+│   │   ├── prompts/            # Prompts para IA
+│   │   ├── templates/          # Templates de resposta
+│   │   └── ai_models/          # Configurações de modelos
+│   ├── services/               # Lógica de negócio
+│   ├── models/                 # Modelos de banco
+│   ├── schemas/                # Schemas Pydantic
+│   ├── controllers/            # Endpoints da API
+│   └── config/                 # Configurações
+├── frontend/                   # Frontend React
 │   ├── src/
 │   │   ├── components/         # Componentes React
 │   │   ├── services/           # Serviços de API
-│   │   └── App.js
-│   └── package.json
-└── README.md
+│   │   └── styles/             # Estilos CSS
+│   └── public/                 # Arquivos estáticos
+├── .vscode/                    # Configurações do VS Code
+└── README.md                   # Documentação
 ```
 
-## 🔧 API Endpoints
+## Instalação
 
-### Emails
-- `POST /api/emails/upload-text` - Upload de email via texto
-- `POST /api/emails/upload-file` - Upload de email via arquivo
-- `GET /api/emails` - Listar emails processados
-- `GET /api/emails/{id}` - Obter email com classificação
+### **Pré-requisitos**
+- Python 3.11+
+- Node.js 18+
+- Docker (opcional)
 
-### Documentação
-- `GET /docs` - Documentação interativa da API (Swagger)
-
-## 🎯 Como Usar
-
-1. **Acesse a aplicação** em `http://localhost:3000`
-
-2. **Faça upload de um email:**
-   - Cole o texto diretamente, ou
-   - Faça upload de um arquivo .txt ou .pdf
-
-3. **Visualize os resultados:**
-   - Categoria: Produtivo ou Improdutivo
-   - Nível de confiança da classificação
-   - Resposta automática sugerida
-
-4. **Consulte o histórico** de classificações anteriores
-
-## 🧠 Algoritmo de Classificação
-
-O sistema utiliza uma abordagem híbrida:
-
-1. **Pré-processamento NLP:**
-   - Remoção de stop words
-   - Stemming/Lemmatização
-   - Extração de features
-
-2. **Classificação por IA:**
-   - OpenAI GPT-3.5-turbo para análise contextual
-   - Fallback com análise de keywords
-   - Score de confiança
-
-3. **Geração de Resposta:**
-   - Respostas personalizadas baseadas na categoria
-   - Tom profissional para emails produtivos
-   - Respostas educadas mas firmes para spam
-
-## 🔒 Segurança
-
-- Soft delete para preservar histórico
-- Validação de tipos de arquivo
-- Limite de tamanho de arquivo (10MB)
-- Sanitização de entrada
-
-## 🚀 Deploy
-
-### Backend
+### **1. Clone o repositório**
 ```bash
-# Usando uvicorn em produção
-uvicorn main:app --host 0.0.0.0 --port 8000
+git clone https://github.com/lucasnoronhagois/auto-email-ai.git
+cd auto-email-ai
 ```
 
-### Frontend
+### **2. Backend Setup**
 ```bash
-# Build para produção
-npm run build
+cd backend
+
+# Criar ambiente virtual
+python -m venv venv
+
+# Ativar ambiente virtual
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
+source venv/bin/activate
+
+# Instalar dependências
+pip install -r requirements.txt
 ```
 
-## 📝 Licença
+### **3. Frontend Setup**
+```bash
+cd frontend
 
-Este projeto foi desenvolvido como parte do Case AutoU.
+# Instalar dependências
+npm install
+```
 
-## 🤝 Contribuição
+### **4. Configuração do Banco**
+```bash
+# Usar SQLite (padrão) ou MySQL com Docker
+docker run --name mysql-autou -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=autou_db -p 3308:3306 -d mysql:8.0
+```
 
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
+### **5. Variáveis de Ambiente**
+Crie um arquivo `.env` na raiz do projeto:
+```env
+DATABASE_URL=sqlite:///./autou.db
+# ou para MySQL:
+# DATABASE_URL=mysql+pymysql://root:password@localhost:3308/autou_db
+
+SECRET_KEY=sua-chave-secreta-aqui
+DEBUG=True
+
+# Opcional - Hugging Face Token
+HF_TOKEN=seu-token-huggingface
+```
+
+## Execução
+
+### **Backend**
+```bash
+cd backend
+venv\Scripts\activate  # Windows
+python run.py
+```
+Servidor rodando em: `http://localhost:8000`
+
+### **Frontend**
+```bash
+cd frontend
+npm run dev
+```
+Aplicação rodando em: `http://localhost:5173`
+
+### **Scripts Automatizados**
+```bash
+# Windows
+start_backend.bat
+start_frontend.bat
+```
+
+## Como Funciona
+
+### **1. Classificação de Emails**
+- **Upload** de arquivo (.txt, .pdf) ou texto direto
+- **Análise** por palavras-chave organizadas por categoria
+- **Detecção** de tópicos específicos (reuniões, projetos, etc.)
+- **Classificação** como "Produtivo" ou "Improdutivo"
+
+### **2. Geração de Respostas**
+- **IA primeiro**: Tenta gerar resposta contextualizada
+- **Fallback**: Usa templates organizados por categoria
+- **Respostas específicas**: Por tipo de email detectado
+- **Tom corporativo**: Profissional em todos os casos
+
+### **3. Categorias Suportadas**
+
+#### **Emails Produtivos**
+- **Meetings** - Reuniões e compromissos
+- **Projects** - Projetos e tarefas
+- **Sales/Business** - Propostas comerciais
+- **Financial** - Questões financeiras
+- **HR/Recruitment** - Recrutamento
+- **Technology** - Questões técnicas
+- **Strategy/Planning** - Planejamento estratégico
+- **Urgent/Important** - Assuntos urgentes
+
+#### **Emails Improdutivos**
+- **Spam/Promotions** - Promoções e spam
+- **Personal Greetings** - Mensagens pessoais
+- **Scams/Fraud** - Golpes e fraudes
+- **Adult Content** - Conteúdo inadequado
+- **Social Media** - Convites de redes sociais
+
+## Configuração Avançada
+
+### **Modelos de IA**
+O sistema suporta múltiplos provedores:
+
+#### **Hugging Face (Gratuito)**
+- Llama 3.1/3.2 Instruct
+- Microsoft Phi-4 Mini
+- SmolLM3
+- Configurável em `data/ai_models/huggingface_models.py`
+
+#### **Ollama (Local)**
+- Modelos Llama locais
+- Phi-3 Mini
+- Configurável em `data/ai_models/ollama_models.py`
+
+### **Personalização**
+- **Palavras-chave**: Editar em `data/keywords/`
+- **Prompts**: Modificar em `data/prompts/`
+- **Templates**: Ajustar em `data/templates/`
+
+## API Endpoints
+
+### **Emails**
+- `POST /api/emails/upload-file` - Upload de arquivo
+- `POST /api/emails/upload-text` - Texto direto
+- `GET /api/emails/` - Listar emails
+- `GET /api/emails/{id}` - Buscar email específico
+
+### **Classificações**
+- `GET /api/classifications/` - Listar classificações
+- `GET /api/classifications/{id}` - Buscar classificação
+
+## Exemplos de Uso
+
+### **Email de Reunião**
+```
+Input: "Olá, gostaria de agendar uma reunião para discutir o projeto X"
+Output: "Produtivo - Meetings"
+Resposta: "Prezado(a), agradecemos o convite para a reunião. Nossa equipe analisará a proposta e retornaremos com nossa disponibilidade em até 24 horas. Atenciosamente, Equipe Comercial."
+```
+
+### **Email de Natal**
+```
+Input: "Feliz Natal e um próspero ano novo!"
+Output: "Improdutivo - Personal Greetings"
+Resposta: "Prezado(a), agradecemos suas felicitações e carinho. Atenciosamente, Departamento de Relacionamento."
+```
+
+## Contribuição
+
+1. **Fork** o projeto
+2. **Crie** uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. **Commit** suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. **Push** para a branch (`git push origin feature/AmazingFeature`)
+5. **Abra** um Pull Request
+
+## Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+## Autor
+
+**Lucas Noronha Gois**
+- GitHub: [@lucasnoronhagois](https://github.com/lucasnoronhagois)
+- LinkedIn: [Lucas Noronha](https://linkedin.com/in/lucasnoronhagois)
+
+## Agradecimentos
+
+- **Hugging Face** - Modelos de IA gratuitos
+- **FastAPI** - Framework web moderno
+- **React** - Biblioteca para interfaces
+- **Tailwind CSS** - Framework CSS utilitário
+
+## Suporte
+
+Se você encontrar algum problema ou tiver dúvidas:
+
+1. **Verifique** os [Issues](https://github.com/lucasnoronhagois/auto-email-ai/issues)
+2. **Crie** um novo issue se necessário
+3. **Entre em contato** via LinkedIn
+
+---
+
+**Se este projeto foi útil para você, considere dar uma estrela!**

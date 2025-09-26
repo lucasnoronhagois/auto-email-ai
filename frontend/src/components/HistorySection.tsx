@@ -1,17 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Calendar, Clock, Eye } from 'lucide-react';
-import { emailService } from '../services/emailService.js';
+import { CheckCircle, XCircle, Calendar } from 'lucide-react';
+import { emailService } from '../services';
 
-export const HistorySection = () => {
-  const [emails, setEmails] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedEmail, setSelectedEmail] = useState(null);
+interface HistoricoItem {
+  id: number;
+  email_id: number;
+  classification_id: number;
+  email_subject: string;
+  email_sender: string;
+  email_content: string;
+  classification_category: string;
+  classification_confidence: number;
+  classification_suggested_response: string;
+  created_at: string;
+}
+
+export const HistorySection: React.FC = () => {
+  const [emails, setEmails] = useState<HistoricoItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedEmail, setSelectedEmail] = useState<HistoricoItem | null>(null);
 
   useEffect(() => {
     loadEmails();
   }, []);
 
-  const loadEmails = async () => {
+  const loadEmails = async (): Promise<void> => {
     try {
       const data = await emailService.getHistorico();
       setEmails(data);
@@ -22,16 +35,16 @@ export const HistorySection = () => {
     }
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string): string => {
     return new Date(dateString).toLocaleString('pt-BR');
   };
 
-  const getCategoryIcon = (category) => {
+  const getCategoryIcon = (category: string): React.ComponentType<{ className?: string }> => {
     return category === 'Produtivo' ? CheckCircle : XCircle;
   };
 
-  const getCategoryColor = (category) => {
-    return category === 'Produtivo' ? 'text-success-400' : 'text-danger-400';
+  const getCategoryColor = (category: string): string => {
+    return category === 'Produtivo' ? 'text-green-400' : 'text-red-400';
   };
 
   if (loading) {
@@ -51,8 +64,8 @@ export const HistorySection = () => {
         {emails.length === 0 ? (
           <div className="text-center py-12">
             <Calendar className="h-16 w-16 text-white/40 mx-auto mb-4" />
-            <p className="text-white/80 text-lg">Nenhum email classificado ainda</p>
-            <p className="text-white/60 text-sm">Faça upload de um email para começar</p>
+            <p className="text-white/80 text-lg">Nenhum e-mail classificado ainda</p>
+            <p className="text-white/60 text-sm">Faça upload de um e-mail para começar</p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -142,13 +155,13 @@ export const HistorySection = () => {
                     </span>
                   </div>
                 </div>
-                  <div>
-                    <label className="block text-white/80 text-sm font-medium mb-1">Confiança:</label>
-                    <p className="text-white">
-                      {Math.round((selectedEmail.classification_confidence || 0) * 100)}%
-                    </p>
-                  </div>
+                <div>
+                  <label className="block text-white/80 text-sm font-medium mb-1">Confiança:</label>
+                  <p className="text-white">
+                    {Math.round((selectedEmail.classification_confidence || 0) * 100)}%
+                  </p>
                 </div>
+              </div>
 
               {selectedEmail.classification_suggested_response && (
                 <div>

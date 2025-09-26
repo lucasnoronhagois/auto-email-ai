@@ -12,7 +12,9 @@ create_tables()
 app = FastAPI(
     title="Auto Email Classification API",
     description="API para classificação automática de emails como Produtivo ou Improdutivo",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/docs",
+    redoc_url="/redoc"
 )
 
 # Configure CORS

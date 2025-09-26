@@ -1,8 +1,27 @@
 import React from 'react';
 import { Upload, BarChart3, History, Settings } from 'lucide-react';
 
-export const TabNavigation = ({ activeTab, setActiveTab, hasResults }) => {
-  const tabs = [
+type TabType = 'home' | 'upload' | 'results' | 'history' | 'prompts';
+
+interface TabNavigationProps {
+  activeTab: TabType;
+  setActiveTab: (tab: TabType) => void;
+  hasResults: boolean;
+}
+
+interface Tab {
+  id: TabType;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  disabled?: boolean;
+}
+
+export const TabNavigation: React.FC<TabNavigationProps> = ({ 
+  activeTab, 
+  setActiveTab, 
+  hasResults 
+}) => {
+  const tabs: Tab[] = [
     { id: 'upload', label: 'Upload', icon: Upload },
     { id: 'results', label: 'Resultados', icon: BarChart3, disabled: !hasResults },
     { id: 'history', label: 'Histórico', icon: History },

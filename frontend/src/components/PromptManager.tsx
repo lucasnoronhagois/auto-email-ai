@@ -1,14 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Save, X, Eye, EyeOff } from 'lucide-react';
-import { promptService } from '../services/promptService.js';
+import { Plus, Edit, Trash2, Save, X } from 'lucide-react';
+import { promptService } from '../services';
 
-export const PromptManager = () => {
-  const [prompts, setPrompts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editingId, setEditingId] = useState(null);
-  const [showForm, setShowForm] = useState(false);
-  const [activeSection, setActiveSection] = useState('productive'); // 'productive' ou 'unproductive'
-  const [formData, setFormData] = useState({
+interface Prompt {
+  id: number;
+  type: string;
+  category: string;
+  subcategory: string;
+  content: string;
+  description: string;
+  version: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface PromptType {
+  value: string;
+  label: string;
+}
+
+interface PromptTypes {
+  types: PromptType[];
+  categories: PromptType[];
+  subcategories: PromptType[];
+}
+
+interface FormData {
+  type: string;
+  category: string;
+  subcategory: string;
+  content: string;
+  description: string;
+  version: number;
+}
+
+export const PromptManager: React.FC = () => {
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [activeSection, setActiveSection] = useState<'productive' | 'unproductive'>('productive');
+  const [formData, setFormData] = useState<FormData>({
     type: 'classification',
     category: 'produtivo',
     subcategory: 'general',
@@ -16,7 +49,7 @@ export const PromptManager = () => {
     description: '',
     version: 1
   });
-  const [promptTypes, setPromptTypes] = useState({ types: [], categories: [], subcategories: [] });
+  const [promptTypes, setPromptTypes] = useState<PromptTypes>({ types: [], categories: [], subcategories: [] });
 
   useEffect(() => {
     loadPrompts();
@@ -25,7 +58,7 @@ export const PromptManager = () => {
 
   // Fechar modal com ESC
   useEffect(() => {
-    const handleEscKey = (event) => {
+    const handleEscKey = (event: KeyboardEvent): void => {
       if (event.key === 'Escape' && showForm) {
         resetForm();
       }
@@ -37,11 +70,11 @@ export const PromptManager = () => {
     }
   }, [showForm]);
 
-  const loadPrompts = async () => {
+  const loadPrompts = async (): Promise<void> => {
     try {
       const data = await promptService.getPrompts();
       // Ordenar por ID para manter ordem consistente
-      const sortedData = data.sort((a, b) => a.id - b.id);
+      const sortedData = data.sort((a: Prompt, b: Prompt) => a.id - b.id);
       setPrompts(sortedData);
     } catch (error) {
       console.error('Erro ao carregar prompts:', error);
@@ -50,7 +83,7 @@ export const PromptManager = () => {
     }
   };
 
-  const loadPromptTypes = async () => {
+  const loadPromptTypes = async (): Promise<void> => {
     try {
       const data = await promptService.getPromptTypes();
       setPromptTypes(data);
@@ -59,7 +92,7 @@ export const PromptManager = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     try {
       if (editingId) {
@@ -83,7 +116,7 @@ export const PromptManager = () => {
     }
   };
 
-  const handleEdit = (prompt) => {
+  const handleEdit = (prompt: Prompt): void => {
     setFormData({
       type: prompt.type,
       category: prompt.category,
@@ -96,7 +129,7 @@ export const PromptManager = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (promptId) => {
+  const handleDelete = async (promptId: number): Promise<void> => {
     if (window.confirm('Tem certeza que deseja remover este prompt?')) {
       try {
         await promptService.deletePrompt(promptId);
@@ -107,7 +140,7 @@ export const PromptManager = () => {
     }
   };
 
-  const resetForm = () => {
+  const resetForm = (): void => {
     setFormData({
       type: 'classification',
       category: 'produtivo',
@@ -120,16 +153,15 @@ export const PromptManager = () => {
     setShowForm(false);
   };
 
-  const getTypeLabel = (type) => {
+  const getTypeLabel = (type: string): string => {
     return type.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  const getCategoryLabel = (category) => {
+  const getCategoryLabel = (category: string): string => {
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
   };
 
-
-  const getFilteredSubcategories = () => {
+  const getFilteredSubcategories = (): PromptType[] => {
     const productiveSubcategories = ['meetings', 'projects', 'sales_business', 'customer_service', 'collaboration', 'training', 'reporting', 'financial', 'hr_recruitment', 'technology', 'strategy_planning', 'urgent_important'];
     const unproductiveSubcategories = ['spam', 'promotions', 'social_media', 'entertainment', 'personal', 'advertisements'];
     const generalSubcategories = ['general', 'other'];
@@ -143,7 +175,7 @@ export const PromptManager = () => {
     }
   };
 
-  const getFilteredPrompts = () => {
+  const getFilteredPrompts = (): Prompt[] => {
     if (activeSection === 'productive') {
       return prompts.filter(p => p.category === 'produtivo');
     } else if (activeSection === 'unproductive') {
@@ -152,7 +184,7 @@ export const PromptManager = () => {
     return prompts;
   };
 
-  const handleNewPrompt = (category) => {
+  const handleNewPrompt = (category: 'productive' | 'unproductive'): void => {
     setFormData({
       type: 'classification',
       category: category === 'productive' ? 'produtivo' : 'improdutivo',

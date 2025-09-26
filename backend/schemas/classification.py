@@ -4,6 +4,7 @@ from datetime import datetime
 
 class ClassificationBase(BaseModel):
     category: str
+    subcategory: Optional[str] = None
     confidence_score: Optional[float] = None
     suggested_response: Optional[str] = None
     processing_time: Optional[float] = None

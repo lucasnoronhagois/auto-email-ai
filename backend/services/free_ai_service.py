@@ -9,25 +9,32 @@ from data.templates import (
     PRODUCTIVE_TEMPLATES, GENERIC_PRODUCTIVE_TEMPLATES,
     UNPRODUCTIVE_TEMPLATES, GENERIC_UNPRODUCTIVE_TEMPLATES
 )
-from data.ai_models import HUGGINGFACE_GENERATION_MODELS, OLLAMA_MODELS
+from data.ai_models import HUGGINGFACE_GENERATION_MODELS
+from .simple_context_classification import SimpleContextClassification
+from .hybrid_prompt_service import HybridPromptService
 
 class FreeAIService:
-    def __init__(self):
-        # Sistema simplificado - usando apenas classificação inteligente por palavras-chave
-        # que funciona perfeitamente sem dependências externas
+    def __init__(self, db_session=None):
+        # Sistema com análise de contexto inteligente
+        self.context_classifier = SimpleContextClassification()
+        self.prompt_service = HybridPromptService(db_session) if db_session else None
         pass
 
     def classify_email_huggingface(self, email_content: str) -> Dict[str, any]:
-        """Classify email using Hugging Face Inference API"""
-        # Por enquanto, usar apenas classificação por palavras-chave
-        # que funciona perfeitamente
+        """Classify email using context analysis with fallback to keywords"""
+        # Usar análise de contexto por padrões
+        context_result = self.context_classifier.classify_with_context(email_content)
+        if context_result and context_result.get('method') != 'fallback_keyword_analysis':
+            return context_result
+        
+        # Fallback para classificação por palavras-chave tradicional
         return self._keyword_classification(email_content, time.time())
 
     # Métodos removidos - usando apenas classificação inteligente por palavras-chave
 
     # Método de geração com Hugging Face removido - usando apenas templates
 
-    # Método do Ollama removido - usando apenas classificação inteligente
+    # Método do Ollama removido - usando apenas Hugging Face e análise de contexto
 
     def _keyword_classification(self, email_content: str, start_time: float) -> Dict[str, any]:
         """Enhanced keyword-based classification"""
@@ -136,8 +143,15 @@ class FreeAIService:
         # Detectar tópico principal e gerar resposta
         for topic, keywords in BUSINESS_TOPICS.items():
             if any(keyword in content_lower for keyword in keywords):
+                # Usar serviço híbrido para buscar prompt (banco > arquivos > genérico)
+                if self.prompt_service:
+                    prompt_template = self.prompt_service.get_prompt(topic, "generation")
+                else:
+                    # Fallback para arquivos locais se não houver serviço híbrido
+                    prompt_template = PRODUCTIVE_PROMPTS.get(topic, "")
+                
                 # Tentar usar IA primeiro (se disponível)
-                ai_response = self._generate_with_ai(PRODUCTIVE_PROMPTS[topic], email_content)
+                ai_response = self._generate_with_ai(prompt_template, email_content)
                 if ai_response:
                     return ai_response
                 
@@ -160,10 +174,7 @@ class FreeAIService:
             if hf_response:
                 return hf_response
             
-            # Tentar Ollama (gratuito e local)
-            ollama_response = self._try_ollama_generation(formatted_prompt)
-            if ollama_response:
-                return ollama_response
+            # Ollama removido - usando apenas Hugging Face
             
             # Se nenhuma IA gratuita estiver disponível, retorna None para usar fallback
             return None
@@ -237,53 +248,6 @@ class FreeAIService:
             print(f"Hugging Face generation failed: {e}")
             return None
 
-    def _try_ollama_generation(self, prompt: str) -> str:
-        """Try to generate response using Ollama with modern models"""
-        try:
-            # Import dinâmico para evitar erros de linter
-            try:
-                import requests  # type: ignore
-            except ImportError:
-                print("❌ Biblioteca 'requests' não instalada")
-                return None
-            
-            # Verificar se Ollama está rodando
-            response = requests.get("http://localhost:11434/api/tags", timeout=2)
-            if response.status_code != 200:
-                return None
-            
-            # Tentar diferentes modelos até encontrar um disponível
-            for model in OLLAMA_MODELS:
-                try:
-                    payload = {
-                        "model": model,
-                        "prompt": prompt,
-                        "stream": False,
-                        "options": {
-                            "temperature": 0.7,
-                            "num_predict": 800
-                        }
-                    }
-                    
-                    response = requests.post("http://localhost:11434/api/generate", 
-                                           json=payload, timeout=30)
-                    
-                    if response.status_code == 200:
-                        result = response.json()
-                        response_text = result.get("response", "").strip()
-                        print(f"✅ Resposta gerada com sucesso usando Ollama modelo: {model}")
-                        return response_text
-                    
-                except Exception as e:
-                    print(f"❌ Modelo Ollama {model} falhou: {e}")
-                    continue
-            
-            print("❌ Todos os modelos do Ollama falharam")
-            return None
-            
-        except Exception as e:
-            print(f"Ollama generation failed: {e}")
-            return None
 
     def _generate_unproductive_response(self, email_content: str) -> str:
         """Generate polite but firm corporate response for unproductive emails based on detected categories"""
@@ -294,8 +258,15 @@ class FreeAIService:
         # Detectar categoria principal e gerar resposta específica
         for category, keywords in UNPRODUCTIVE_CATEGORIES.items():
             if any(keyword in content_lower for keyword in keywords):
+                # Usar serviço híbrido para buscar prompt (banco > arquivos > genérico)
+                if self.prompt_service:
+                    prompt_template = self.prompt_service.get_prompt(category, "generation")
+                else:
+                    # Fallback para arquivos locais se não houver serviço híbrido
+                    prompt_template = UNPRODUCTIVE_PROMPTS.get(category, "")
+                
                 # Tentar usar IA primeiro (se disponível)
-                ai_response = self._generate_with_ai(UNPRODUCTIVE_PROMPTS[category], email_content)
+                ai_response = self._generate_with_ai(prompt_template, email_content)
                 if ai_response:
                     return ai_response
                 

@@ -1,17 +1,54 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Send, Loader2 } from 'lucide-react';
-import { emailService } from '../services/emailService.js';
+import { emailService } from '../services';
 
-export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoading }) => {
-  const [uploadType, setUploadType] = useState('text');
-  const [emailContent, setEmailContent] = useState('');
-  const [emailSubject, setEmailSubject] = useState('');
-  const [emailSender, setEmailSender] = useState('');
-  const [emailRecipient, setEmailRecipient] = useState('');
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [dragActive, setDragActive] = useState(false);
+interface ClassificationResult {
+  email: {
+    id: number;
+    subject: string;
+    content: string;
+    sender: string;
+    recipient: string;
+    file_name: string;
+    file_type: string;
+    is_deleted: boolean;
+    created_at: string;
+    updated_at: string;
+  };
+  classification: {
+    id: number;
+    email_id: number;
+    category: string;
+    subcategory: string;
+    confidence_score: number;
+    suggested_response: string;
+    processing_time: number;
+    is_deleted: boolean;
+    created_at: string;
+    updated_at: string;
+  };
+}
 
-  const handleFileSelect = (file) => {
+interface UploadSectionProps {
+  onClassificationComplete: (result: ClassificationResult) => void;
+  isLoading: boolean;
+  setIsLoading: (loading: boolean) => void;
+}
+
+export const UploadSection: React.FC<UploadSectionProps> = ({ 
+  onClassificationComplete, 
+  isLoading, 
+  setIsLoading 
+}) => {
+  const [uploadType, setUploadType] = useState<'text' | 'file'>('text');
+  const [emailContent, setEmailContent] = useState<string>('');
+  const [emailSubject, setEmailSubject] = useState<string>('');
+  const [emailSender, setEmailSender] = useState<string>('');
+  const [emailRecipient, setEmailRecipient] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [dragActive, setDragActive] = useState<boolean>(false);
+
+  const handleFileSelect = (file: File | null): void => {
     if (file && (file.type === 'text/plain' || file.type === 'application/pdf')) {
       setSelectedFile(file);
     } else {
@@ -19,7 +56,7 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
     }
   };
 
-  const handleDrag = (e) => {
+  const handleDrag = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === 'dragenter' || e.type === 'dragover') {
@@ -29,7 +66,7 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
     }
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>): void => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -39,16 +76,16 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      let result;
+      let result: ClassificationResult;
       
       if (uploadType === 'text') {
         if (!emailContent.trim()) {
-          alert('Por favor, insira o conteúdo do email');
+          alert('Por favor, insira o conteúdo do e-mail');
           setIsLoading(false);
           return;
         }
@@ -83,8 +120,8 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
       setSelectedFile(null);
       
     } catch (error) {
-      console.error('Erro ao processar email:', error);
-      alert('Erro ao processar o email. Tente novamente.');
+      console.error('Erro ao processar e-mail:', error);
+      alert('Erro ao processar o e-mail. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +130,7 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
   return (
     <div className="glass-effect rounded-xl p-8 animate-fade-in">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-white mb-2">Classificar Email</h2>
+        <h2 className="text-2xl font-bold text-white mb-2">Classificar e-mail</h2>
         <p className="text-white/80">Faça upload de um arquivo ou cole o texto do email</p>
       </div>
 
@@ -137,7 +174,7 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
               value={emailSubject}
               onChange={(e) => setEmailSubject(e.target.value)}
               className="w-full px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
-              placeholder="Assunto do email"
+              placeholder="Assunto do e-mail"
             />
           </div>
           <div>
@@ -158,14 +195,14 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
         {uploadType === 'text' ? (
           <div>
             <label className="block text-white/90 text-sm font-medium mb-2">
-              Conteúdo do Email *
+              Conteúdo do e-mail *
             </label>
             <textarea
               value={emailContent}
               onChange={(e) => setEmailContent(e.target.value)}
               rows={8}
               className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30 resize-none"
-              placeholder="Cole aqui o conteúdo do email que deseja classificar..."
+              placeholder="Cole aqui o conteúdo do e-mail que deseja classificar..."
               required
             />
           </div>
@@ -208,7 +245,7 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
                   <input
                     type="file"
                     accept=".txt,.pdf"
-                    onChange={(e) => handleFileSelect(e.target.files[0])}
+                    onChange={(e) => handleFileSelect(e.target.files?.[0] || null)}
                     className="hidden"
                     id="file-upload"
                   />
@@ -239,7 +276,7 @@ export const UploadSection = ({ onClassificationComplete, isLoading, setIsLoadin
             ) : (
               <>
                 <Send className="h-5 w-5 mr-2" />
-                Classificar Email
+                Classificar e-mail
               </>
             )}
           </button>

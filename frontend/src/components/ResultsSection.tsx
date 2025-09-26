@@ -1,22 +1,50 @@
 import React from 'react';
 import { CheckCircle, XCircle, Clock, Brain, Copy, RefreshCw } from 'lucide-react';
+import { translateSubcategory } from '../utils/subcategoryTranslations';
 
-export const ResultsSection = ({ result }) => {
+interface ClassificationResult {
+  email: {
+    id: number;
+    subject: string;
+    content: string;
+    sender: string;
+    recipient: string;
+    file_name: string;
+    file_type: string;
+    is_deleted: boolean;
+    created_at: string;
+    updated_at: string;
+  };
+  classification: {
+    id: number;
+    email_id: number;
+    category: string;
+    subcategory: string;
+    confidence_score: number;
+    suggested_response: string;
+    processing_time: number;
+    is_deleted: boolean;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+interface ResultsSectionProps {
+  result: ClassificationResult;
+}
+
+export const ResultsSection: React.FC<ResultsSectionProps> = ({ result }) => {
   const { email, classification } = result;
   
   const isProductive = classification.category === 'Produtivo';
   const confidencePercentage = Math.round((classification.confidence_score || 0) * 100);
 
-  const copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text);
-    // You could add a toast notification here
+  const copyToClipboard = (text: string): void => {
+    navigator.clipboard.writeText(text);    
   };
 
-  const getCategoryColor = () => {
-    return isProductive ? 'success' : 'danger';
-  };
 
-  const getCategoryIcon = () => {
+  const getCategoryIcon = (): React.ComponentType<{ className?: string }> => {
     return isProductive ? CheckCircle : XCircle;
   };
 
@@ -35,13 +63,13 @@ export const ResultsSection = ({ result }) => {
           <div className={`
             flex items-center space-x-3 px-6 py-4 rounded-lg
             ${isProductive 
-              ? 'bg-success-500/20 border border-success-500/30' 
-              : 'bg-danger-500/20 border border-danger-500/30'
+              ? 'bg-green-500/20 border border-green-500/30' 
+              : 'bg-red-500/20 border border-red-500/30'
             }
           `}>
-            <CategoryIcon className={`h-8 w-8 ${isProductive ? 'text-success-400' : 'text-danger-400'}`} />
+            <CategoryIcon className={`h-8 w-8 ${isProductive ? 'text-green-400' : 'text-red-400'}`} />
             <div className="text-center">
-              <h3 className={`text-2xl font-bold ${isProductive ? 'text-success-400' : 'text-danger-400'}`}>
+              <h3 className={`text-2xl font-bold ${isProductive ? 'text-green-400' : 'text-red-400'}`}>
                 {classification.category}
               </h3>
               <p className="text-white/80 text-sm">
@@ -67,8 +95,8 @@ export const ResultsSection = ({ result }) => {
           </div>
           <div className="bg-white/10 rounded-lg p-4 text-center">
             <div className={`h-6 w-6 mx-auto mb-2 rounded-full ${
-              confidencePercentage >= 80 ? 'bg-success-400' : 
-              confidencePercentage >= 60 ? 'bg-yellow-400' : 'bg-danger-400'
+              confidencePercentage >= 80 ? 'bg-green-400' : 
+              confidencePercentage >= 60 ? 'bg-yellow-400' : 'bg-red-400'
             }`} />
             <p className="text-white/80 text-sm">Nível de Confiança</p>
             <p className="text-white font-medium">{confidencePercentage}%</p>
@@ -78,7 +106,7 @@ export const ResultsSection = ({ result }) => {
 
       {/* Email Content */}
       <div className="glass-effect rounded-xl p-8">
-        <h3 className="text-xl font-bold text-white mb-4">Conteúdo do Email</h3>
+        <h3 className="text-xl font-bold text-white mb-4">Conteúdo do e-mail</h3>
         
         {email.subject && (
           <div className="mb-4">
@@ -106,7 +134,18 @@ export const ResultsSection = ({ result }) => {
       {classification.suggested_response && (
         <div className="glass-effect rounded-xl p-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-bold text-white">Resposta Sugerida</h3>
+            <div className="flex items-center space-x-3">
+              <h3 className="text-xl font-bold text-white">Resposta Sugerida</h3>
+              <span className={`
+                inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                ${isProductive 
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
+                }
+              `}>
+                {translateSubcategory(classification.subcategory) || classification.category}
+              </span>
+            </div>
             <button
               onClick={() => copyToClipboard(classification.suggested_response)}
               className="flex items-center space-x-2 px-3 py-1 bg-white/20 hover:bg-white/30 rounded-lg text-white text-sm transition-colors"
@@ -129,7 +168,7 @@ export const ResultsSection = ({ result }) => {
           className="flex items-center space-x-2 px-6 py-3 bg-white/20 hover:bg-white/30 rounded-lg text-white font-medium transition-colors"
         >
           <RefreshCw className="h-5 w-5" />
-          <span>Classificar Outro Email</span>
+          <span>Classificar outro e-mail</span>
         </button>
       </div>
     </div>

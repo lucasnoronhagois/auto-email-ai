@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from config.database import get_db
 from services.prompt_service import PromptService
+from services.hybrid_prompt_service import HybridPromptService
 from schemas.prompt import PromptCreate, PromptUpdate, PromptResponse
 from models.prompt import PromptType, PromptCategory, PromptSubcategory
 from typing import List, Optional
@@ -17,6 +18,11 @@ async def create_prompt(
     prompt_service = PromptService(db)
     try:
         prompt = prompt_service.create_prompt(prompt_data)
+        
+        # Invalidar cache do serviço híbrido
+        hybrid_service = HybridPromptService(db)
+        hybrid_service.invalidate_cache()
+        
         return prompt
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Erro ao criar prompt: {str(e)}")
@@ -67,6 +73,11 @@ async def update_prompt(
     prompt = prompt_service.update_prompt(prompt_id, prompt_data)
     if not prompt:
         raise HTTPException(status_code=404, detail="Prompt não encontrado")
+    
+    # Invalidar cache do serviço híbrido
+    hybrid_service = HybridPromptService(db)
+    hybrid_service.invalidate_cache()
+    
     return prompt
 
 @router.delete("/{prompt_id}")

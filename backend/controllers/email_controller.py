@@ -89,7 +89,7 @@ async def process_email_classification(email, db: Session) -> EmailClassificatio
     
     # Initialize services
     nlp_service = NLPService()
-    ai_service = AIService()
+    ai_service = AIService(db)  # Passar sessão do banco para usar prompts híbridos
     classification_service = ClassificationService(db)
     historico_service = HistoricoService(db)
     
@@ -102,10 +102,22 @@ async def process_email_classification(email, db: Session) -> EmailClassificatio
     # Generate suggested response
     suggested_response = ai_service.generate_response(email.content, ai_result['category'])
     
+    # Determine subcategory
+    subcategory = None
+    # Novo sistema: subcategory vem diretamente do resultado
+    if ai_result.get('subcategory'):
+        subcategory = ai_result['subcategory']
+    # Fallback para sistema antigo (compatibilidade)
+    elif ai_result['category'] == 'Produtivo' and ai_result.get('primary_topic'):
+        subcategory = ai_result['primary_topic']
+    elif ai_result['category'] == 'Improdutivo' and ai_result.get('primary_unproductive_category'):
+        subcategory = ai_result['primary_unproductive_category']
+    
     # Create classification record
     classification_data = ClassificationCreate(
         email_id=email.id,
         category=ai_result['category'],
+        subcategory=subcategory,
         confidence_score=ai_result['confidence'],
         suggested_response=suggested_response,
         processing_time=time.time() - start_time

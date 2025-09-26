@@ -1,38 +1,41 @@
-# AutoU - Sistema de Classificação Automática de Emails
+# AutoU - Sistema de Classificação Inteligente de E-mails
 
-Sistema inteligente para classificação automática de emails como Produtivo ou Improdutivo, com geração de respostas sugeridas usando IA.
+Sistema inteligente para classificação automática de e-mails como Produtivo ou Improdutivo, com geração de respostas sugeridas baseadas em contexto e padrões.
 
 ## Características
 
-- **Classificação Automática**: IA + NLP para classificar emails
-- **Geração de Respostas**: Sugestões personalizadas baseadas no conteúdo
-- **Interface Web**: Frontend React com design moderno
+- **Classificação Automática**: Análise contextual usando padrões regex e palavras-chave
+- **Geração de Respostas**: Sugestões personalizadas baseadas na categoria e subcategoria
+- **Interface Web**: Frontend React com TypeScript e design moderno
 - **API REST**: Backend FastAPI com documentação automática
 - **Banco de Dados**: PostgreSQL com relacionamentos otimizados
 - **Docker**: Deploy completo com containers
-- **Interface de Banco**: pgAdmin para gerenciamento visual
+- **Gerenciamento de Prompts**: Interface para edição e personalização de templates
 
 ## Arquitetura
 
 ### Backend (FastAPI)
 - **API REST** com documentação automática
-- **Classificação IA** usando Hugging Face e Ollama
+- **Classificação Contextual** usando padrões regex e análise de conteúdo
 - **Banco PostgreSQL** com relacionamentos
-- **Processamento NLP** para análise de conteúdo
-- **Geração de respostas** baseada em templates e IA
+- **Sistema de Prompts** híbrido (banco + arquivos locais)
+- **Geração de respostas** baseada em templates personalizáveis
+- **Cache inteligente** para otimização de performance
 
-### Frontend (React + Vite)
+### Frontend (React + TypeScript)
 - **Interface moderna** com Tailwind CSS
 - **Upload de arquivos** e texto
 - **Visualização de resultados** em tempo real
-- **Histórico de classificações**
-- **Design responsivo**
+- **Histórico de classificações** com sistema de expansão
+- **Gerenciador de prompts** com edição inline
+- **Design responsivo** e acessível
+- **Sistema de abas** para organização de conteúdo
 
 ### Banco de Dados
 - **PostgreSQL** como banco principal
-- **Redis** para cache e sessões
-- **Relacionamentos** entre emails e classificações
-- **pgAdmin** para interface visual
+- **Relacionamentos** entre emails, classificações e prompts
+- **Sistema de versionamento** para prompts
+- **Índices otimizados** para performance
 
 ## Instalação e Configuração
 
@@ -77,11 +80,11 @@ npm run dev
 
 #### 1. Banco de Dados
 ```bash
-# Iniciar PostgreSQL e Redis
+# Iniciar PostgreSQL
 .\start_database.bat
 
 # Ou manualmente
-docker-compose up -d postgres redis
+docker-compose up -d postgres
 ```
 
 #### 2. Configurar Ambiente
@@ -113,25 +116,42 @@ npm run dev
 - **Frontend**: http://localhost:3000
 - **Backend API**: http://localhost:8000
 - **Documentação API**: http://localhost:8000/docs
-- **pgAdmin**: http://localhost:5050
-
-### Credenciais pgAdmin
-- **Email**: admin@autou.com
-- **Senha**: admin123
-
-### Configuração do Servidor PostgreSQL no pgAdmin
-- **Host**: postgres
-- **Port**: 5432
-- **Database**: autou_db
-- **Username**: autou_user
-- **Password**: autou_password
 
 ### Como Usar
 1. **Acesse** http://localhost:3000
-2. **Cole um texto** de email ou faça upload de arquivo
+2. **Cole um texto** de e-mail ou faça upload de arquivo
 3. **Aguarde** a classificação automática
-4. **Veja o resultado** com confiança e resposta sugerida
-5. **Copie** a resposta sugerida se necessário
+4. **Veja o resultado** com categoria, subcategoria e resposta sugerida
+5. **Copie** a resposta sugerida ou gere uma nova
+6. **Gerencie prompts** através da aba "Prompts"
+
+## Funcionalidades
+
+### Classificação de E-mails
+- **Categorias**: Produtivo / Improdutivo
+- **Subcategorias**: 
+  - Produtivos: meetings, projects, sales_business, financial, hr_recruitment, technology, strategy_planning, urgent_important
+  - Improdutivos: spam_promotions, personal_greetings, scams_fraud, adult_content, social_media
+- **Análise contextual** baseada em padrões regex
+- **Score de confiança** para cada classificação
+
+### Geração de Respostas
+- **Templates personalizáveis** por categoria e subcategoria
+- **Respostas contextualizadas** baseadas no conteúdo do e-mail
+- **Sistema de regeneração** para múltiplas opções
+- **Cópia facilitada** com feedback visual
+
+### Gerenciamento de Prompts
+- **Interface de edição** inline
+- **Sistema híbrido** (banco de dados + arquivos locais)
+- **Organização por abas** (Produtivos / Improdutivos)
+- **Versionamento** e histórico de alterações
+
+### Histórico e Analytics
+- **Visualização completa** de todas as classificações
+- **Sistema de expansão** para detalhes
+- **Filtros por categoria** e data
+- **Métricas de performance**
 
 ## Estrutura do Projeto
 
@@ -147,7 +167,10 @@ Case-AutoU/
 │   └── requirements.txt   # Dependências Python
 ├── frontend/              # Interface React
 │   ├── src/              # Código fonte
-│   ├── components/       # Componentes React
+│   │   ├── components/   # Componentes React
+│   │   ├── services/     # Serviços de API
+│   │   ├── hooks/        # Hooks personalizados
+│   │   └── utils/        # Utilitários
 │   └── package.json      # Dependências Node
 ├── docker-compose.yml    # Orquestração Docker
 ├── setup_postgresql.bat  # Script de configuração
@@ -160,8 +183,8 @@ Case-AutoU/
 
 #### emails
 - `id` - Chave primária
-- `subject` - Assunto do email
-- `content` - Conteúdo do email
+- `subject` - Assunto do e-mail
+- `content` - Conteúdo do e-mail
 - `sender` - Remetente
 - `recipient` - Destinatário
 - `file_name` - Nome do arquivo
@@ -173,16 +196,29 @@ Case-AutoU/
 - `id` - Chave primária
 - `email_id` - FK para emails
 - `category` - Categoria (Produtivo/Improdutivo)
+- `subcategory` - Subcategoria específica
 - `confidence_score` - Score de confiança (0-100%)
 - `suggested_response` - Resposta sugerida
 - `processing_time` - Tempo de processamento
 - `created_at` - Data de criação
 - `updated_at` - Data de atualização
 
+#### prompts
+- `id` - Chave primária
+- `type` - Tipo do prompt (classification/response_generation)
+- `category` - Categoria (produtivo/improdutivo)
+- `subcategory` - Subcategoria específica
+- `content` - Conteúdo do prompt
+- `description` - Descrição do prompt
+- `version` - Versão do prompt
+- `is_active` - Status ativo
+- `created_at` - Data de criação
+- `updated_at` - Data de atualização
+
 ### Relacionamentos
-- Um email pode ter múltiplas classificações
-- Uma classificação pertence a um email
-- Relacionamento 1:N entre emails e classifications
+- Um e-mail pode ter múltiplas classificações
+- Uma classificação pertence a um e-mail
+- Prompts são independentes mas referenciados por categoria/subcategoria
 
 ## Scripts Disponíveis
 
@@ -190,7 +226,6 @@ Case-AutoU/
 - `setup_postgresql.bat` - Configurar ambiente PostgreSQL
 - `build_and_run.bat` - Build e deploy completo
 - `start_database.bat` - Iniciar apenas banco de dados
-- `start_pgadmin.bat` - Iniciar interface do banco
 
 ### Comandos Manuais
 ```bash
@@ -222,10 +257,6 @@ HOST=0.0.0.0
 PORT=8000
 DEBUG=True
 
-# AI Services
-OPENAI_API_KEY=your_key_here
-HF_TOKEN=your_token_here
-
 # Security
 SECRET_KEY=your_secret_key
 ```
@@ -234,10 +265,8 @@ SECRET_KEY=your_secret_key
 
 ### Serviços
 - **postgres**: Banco PostgreSQL
-- **redis**: Cache Redis
 - **backend**: API FastAPI
 - **frontend**: Interface React + Nginx
-- **pgadmin**: Interface do banco
 
 ### Comandos Docker
 ```bash
@@ -245,7 +274,7 @@ SECRET_KEY=your_secret_key
 docker-compose up --build -d
 
 # Apenas banco
-docker-compose up -d postgres redis
+docker-compose up -d postgres
 
 # Ver logs
 docker-compose logs -f
@@ -258,9 +287,9 @@ docker-compose down
 
 ### Estrutura de Desenvolvimento
 - **Backend**: FastAPI com hot reload
-- **Frontend**: Vite com hot reload
-- **Banco**: PostgreSQL com pgAdmin
-- **Logs**: Reduzidos para desenvolvimento
+- **Frontend**: Vite com hot reload e TypeScript
+- **Banco**: PostgreSQL com relacionamentos otimizados
+- **Logs**: Configurados para desenvolvimento
 
 ### Comandos de Desenvolvimento
 ```bash
@@ -309,15 +338,6 @@ cd backend
 pip install -r requirements.txt
 ```
 
-#### 4. pgAdmin Não Acessa
-```bash
-# Verificar se está rodando
-docker-compose ps pgadmin
-
-# Reiniciar pgAdmin
-docker-compose restart pgadmin
-```
-
 ### Logs e Debug
 ```bash
 # Ver logs do Docker
@@ -334,16 +354,16 @@ docker-compose ps
 ## Performance
 
 ### Otimizações Implementadas
-- **Frontend**: Minificação, code splitting, gzip
-- **Backend**: Connection pooling, cache
-- **Banco**: Índices otimizados, relacionamentos
+- **Frontend**: Minificação, code splitting, TypeScript
+- **Backend**: Connection pooling, cache de prompts
+- **Banco**: Índices otimizados, relacionamentos eficientes
 - **Docker**: Multi-stage builds, layers otimizadas
 
 ### Métricas
 - **Tempo de classificação**: ~1-2 segundos
 - **Confiança**: 60-95%
-- **Tamanho da imagem**: ~250MB total
-- **Tempo de build**: ~3-5 minutos
+- **Tamanho da imagem**: ~200MB total
+- **Tempo de build**: ~2-3 minutos
 
 ## Segurança
 
@@ -368,9 +388,11 @@ Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes
 ## Changelog
 
 ### v1.0.0
-- Sistema de classificação automática
-- Interface web completa
+- Sistema de classificação automática contextual
+- Interface web completa com TypeScript
 - Integração com PostgreSQL
 - Deploy com Docker
-- Interface pgAdmin
-- Geração de respostas com IA
+- Sistema de prompts personalizáveis
+- Geração de respostas baseada em templates
+- Histórico de classificações
+- Sistema de abas para organização

@@ -10,7 +10,7 @@ Sistema inteligente para classificação automática de e-mails como Produtivo o
 - **API REST**: Backend FastAPI com documentação automática
 - **Banco de Dados**: PostgreSQL com relacionamentos otimizados
 - **Docker**: Deploy completo com containers
-- **Gerenciamento de Prompts**: Interface para edição e personalização de templates
+- **Gerenciamento de Prompts**: Interface para edição e personalização de prompts
 
 ## Arquitetura
 
@@ -18,9 +18,9 @@ Sistema inteligente para classificação automática de e-mails como Produtivo o
 - **API REST** com documentação automática
 - **Classificação Contextual** usando padrões regex e análise de conteúdo
 - **Banco PostgreSQL** com relacionamentos
-- **Sistema de Prompts** híbrido (banco + arquivos locais)
-- **Geração de respostas** baseada em templates personalizáveis
-- **Cache inteligente** para otimização de performance
+- **Sistema de Prompts** híbrido (banco com prioridade + fallback para arquivos locais)
+- **Geração de respostas** baseada em prompts personalizáveis (banco + fallback)
+- **Cache de prompts** com timeout configurável
 
 ### Frontend (React + TypeScript)
 - **Interface moderna** com Tailwind CSS
@@ -136,7 +136,7 @@ npm run dev
 - **Score de confiança** para cada classificação
 
 ### Geração de Respostas
-- **Templates personalizáveis** por categoria e subcategoria
+- **Prompts personalizáveis** por categoria e subcategoria
 - **Respostas contextualizadas** baseadas no conteúdo do e-mail
 - **Sistema de regeneração** para múltiplas opções
 - **Cópia facilitada** com feedback visual
@@ -163,7 +163,7 @@ Case-AutoU/
 │   ├── models/            # Modelos do banco
 │   ├── services/          # Serviços de negócio
 │   ├── schemas/           # Schemas Pydantic
-│   ├── data/              # Dados e templates
+│   ├── data/              # Dados e prompts locais
 │   └── requirements.txt   # Dependências Python
 ├── frontend/              # Interface React
 │   ├── src/              # Código fonte
@@ -393,6 +393,6 @@ Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes
 - Integração com PostgreSQL
 - Deploy com Docker
 - Sistema de prompts personalizáveis
-- Geração de respostas baseada em templates
+- Geração de respostas baseada em prompts híbridos
 - Histórico de classificações
 - Sistema de abas para organização

@@ -13,10 +13,10 @@ export const HistorySection = () => {
 
   const loadEmails = async () => {
     try {
-      const data = await emailService.getEmails();
+      const data = await emailService.getHistorico();
       setEmails(data);
     } catch (error) {
-      console.error('Erro ao carregar emails:', error);
+      console.error('Erro ao carregar histórico:', error);
     } finally {
       setLoading(false);
     }
@@ -56,34 +56,34 @@ export const HistorySection = () => {
           </div>
         ) : (
           <div className="space-y-4">
-            {emails.map((email) => {
-              const CategoryIcon = getCategoryIcon(email.classification?.category);
-              const categoryColor = getCategoryColor(email.classification?.category);
+            {emails.map((item) => {
+              const CategoryIcon = getCategoryIcon(item.classification_category);
+              const categoryColor = getCategoryColor(item.classification_category);
               
               return (
                 <div
-                  key={email.id}
+                  key={item.id}
                   className="bg-white/10 rounded-lg p-4 hover:bg-white/20 transition-colors cursor-pointer"
-                  onClick={() => setSelectedEmail(email)}
+                  onClick={() => setSelectedEmail(item)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <CategoryIcon className={`h-6 w-6 ${categoryColor}`} />
                       <div>
                         <h3 className="text-white font-medium">
-                          {email.subject || 'Sem assunto'}
+                          {item.email_subject || 'Sem assunto'}
                         </h3>
                         <p className="text-white/60 text-sm">
-                          {email.sender || 'Remetente não informado'}
+                          {item.email_sender || 'Remetente não informado'}
                         </p>
                       </div>
                     </div>
                     <div className="text-right">
                       <p className="text-white/80 text-sm">
-                        {email.classification?.category}
+                        {item.classification_category}
                       </p>
                       <p className="text-white/60 text-xs">
-                        {formatDate(email.created_at)}
+                        {formatDate(item.created_at)}
                       </p>
                     </div>
                   </div>
@@ -109,55 +109,53 @@ export const HistorySection = () => {
             </div>
 
             <div className="space-y-4">
-              {selectedEmail.subject && (
+              {selectedEmail.email_subject && (
                 <div>
                   <label className="block text-white/80 text-sm font-medium mb-1">Assunto:</label>
-                  <p className="text-white bg-white/10 rounded-lg p-3">{selectedEmail.subject}</p>
+                  <p className="text-white bg-white/10 rounded-lg p-3">{selectedEmail.email_subject}</p>
                 </div>
               )}
 
-              {selectedEmail.sender && (
+              {selectedEmail.email_sender && (
                 <div>
                   <label className="block text-white/80 text-sm font-medium mb-1">Remetente:</label>
-                  <p className="text-white bg-white/10 rounded-lg p-3">{selectedEmail.sender}</p>
+                  <p className="text-white bg-white/10 rounded-lg p-3">{selectedEmail.email_sender}</p>
                 </div>
               )}
 
               <div>
                 <label className="block text-white/80 text-sm font-medium mb-1">Conteúdo:</label>
                 <div className="bg-white/10 rounded-lg p-4 max-h-40 overflow-y-auto">
-                  <p className="text-white whitespace-pre-wrap">{selectedEmail.content}</p>
+                  <p className="text-white whitespace-pre-wrap">{selectedEmail.email_content}</p>
                 </div>
               </div>
 
-              {selectedEmail.classification && (
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-white/80 text-sm font-medium mb-1">Classificação:</label>
-                    <div className="flex items-center space-x-2">
-                      {React.createElement(getCategoryIcon(selectedEmail.classification.category), {
-                        className: `h-5 w-5 ${getCategoryColor(selectedEmail.classification.category)}`
-                      })}
-                      <span className={`font-medium ${getCategoryColor(selectedEmail.classification.category)}`}>
-                        {selectedEmail.classification.category}
-                      </span>
-                    </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-white/80 text-sm font-medium mb-1">Classificação:</label>
+                  <div className="flex items-center space-x-2">
+                    {React.createElement(getCategoryIcon(selectedEmail.classification_category), {
+                      className: `h-5 w-5 ${getCategoryColor(selectedEmail.classification_category)}`
+                    })}
+                    <span className={`font-medium ${getCategoryColor(selectedEmail.classification_category)}`}>
+                      {selectedEmail.classification_category}
+                    </span>
                   </div>
+                </div>
                   <div>
                     <label className="block text-white/80 text-sm font-medium mb-1">Confiança:</label>
                     <p className="text-white">
-                      {Math.round((selectedEmail.classification.confidence_score || 0) * 100)}%
+                      {Math.round((selectedEmail.classification_confidence || 0) * 100)}%
                     </p>
                   </div>
                 </div>
-              )}
 
-              {selectedEmail.classification?.suggested_response && (
+              {selectedEmail.classification_suggested_response && (
                 <div>
                   <label className="block text-white/80 text-sm font-medium mb-1">Resposta Sugerida:</label>
                   <div className="bg-white/10 rounded-lg p-4">
                     <p className="text-white whitespace-pre-wrap">
-                      {selectedEmail.classification.suggested_response}
+                      {selectedEmail.classification_suggested_response}
                     </p>
                   </div>
                 </div>
@@ -168,12 +166,6 @@ export const HistorySection = () => {
                   <Calendar className="h-4 w-4" />
                   <span>Processado em {formatDate(selectedEmail.created_at)}</span>
                 </div>
-                {selectedEmail.classification?.processing_time && (
-                  <div className="flex items-center space-x-1">
-                    <Clock className="h-4 w-4" />
-                    <span>{selectedEmail.classification.processing_time.toFixed(2)}s</span>
-                  </div>
-                )}
               </div>
             </div>
           </div>

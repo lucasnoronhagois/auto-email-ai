@@ -6,8 +6,10 @@ from services.classification_service import ClassificationService
 from services.nlp_service import NLPService
 from services.ai_service import AIService
 from services.file_service import FileService
+from services.historico_service import HistoricoService
 from schemas.email import EmailCreate, EmailResponse
 from schemas.classification import ClassificationCreate, EmailClassificationResponse
+from schemas.historico import HistoricoWithDetails
 from typing import Optional
 import time
 
@@ -22,22 +24,26 @@ async def upload_text_email(
     db: Session = Depends(get_db)
 ):
     """Process email from direct text input"""
-    if not content.strip():
-        raise HTTPException(status_code=400, detail="Conteúdo do email é obrigatório")
-    
-    # Create email record
-    email_service = EmailService(db)
-    email_data = EmailCreate(
-        subject=subject,
-        content=content,
-        sender=sender,
-        recipient=recipient
-    )
-    email = email_service.create_email(email_data)
-    
-    # Process classification
-    result = await process_email_classification(email, db)
-    return result
+    try:
+        if not content.strip():
+            raise HTTPException(status_code=400, detail="Conteúdo do email é obrigatório")
+        
+        # Create email record
+        email_service = EmailService(db)
+        email_data = EmailCreate(
+            subject=subject,
+            content=content,
+            sender=sender,
+            recipient=recipient
+        )
+        email = email_service.create_email(email_data)
+        
+        # Process classification
+        result = await process_email_classification(email, db)
+        return result
+    except Exception as e:
+        print(f"Erro no upload-text: {e}")
+        raise HTTPException(status_code=500, detail=f"Erro interno: {str(e)}")
 
 @router.post("/upload-file", response_model=EmailClassificationResponse)
 async def upload_file_email(
@@ -85,6 +91,7 @@ async def process_email_classification(email, db: Session) -> EmailClassificatio
     nlp_service = NLPService()
     ai_service = AIService()
     classification_service = ClassificationService(db)
+    historico_service = HistoricoService(db)
     
     # Preprocess text with NLP
     features = nlp_service.extract_features(email.content)
@@ -104,6 +111,12 @@ async def process_email_classification(email, db: Session) -> EmailClassificatio
         processing_time=time.time() - start_time
     )
     classification = classification_service.create_classification(classification_data)
+    
+    # Log no histórico
+    historico_service.log_email_created(
+        email_id=email.id,
+        classification_id=classification.id
+    )
     
     return EmailClassificationResponse(
         email={

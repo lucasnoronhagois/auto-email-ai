@@ -1,11 +1,12 @@
 import React from 'react';
-import { Upload, BarChart3, History } from 'lucide-react';
+import { Upload, BarChart3, History, Settings } from 'lucide-react';
 
 export const TabNavigation = ({ activeTab, setActiveTab, hasResults }) => {
   const tabs = [
     { id: 'upload', label: 'Upload', icon: Upload },
     { id: 'results', label: 'Resultados', icon: BarChart3, disabled: !hasResults },
-    { id: 'history', label: 'Histórico', icon: History }
+    { id: 'history', label: 'Histórico', icon: History },
+    { id: 'prompts', label: 'Prompts', icon: Settings }
   ];
 
   return (

@@ -20,5 +20,5 @@ OLLAMA_DEFAULT_CONFIG = {
     "base_url": "http://localhost:11434",
     "timeout": 30,
     "temperature": 0.7,
-    "num_predict": 200
+    "num_predict": 800
 }

@@ -342,3 +342,6 @@ models/
 # Local development
 .local/
 local/
+
+# Environment example files (contain sensitive data)
+backend/env_*_example.txt

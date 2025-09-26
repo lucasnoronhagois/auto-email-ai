@@ -8,7 +8,7 @@ class ClassificationService:
         self.db = db
 
     def create_classification(self, classification_data: ClassificationCreate) -> Classification:
-        db_classification = Classification(**classification_data.dict())
+        db_classification = Classification(**classification_data.model_dump())
         self.db.add(db_classification)
         self.db.commit()
         self.db.refresh(db_classification)

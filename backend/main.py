@@ -1,11 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from config.database import engine, Base
+from config.database import engine, Base, create_tables
 from controllers.email_controller import router as email_router
+from controllers.historico_controller import router as historico_router
+from controllers.prompt_controller import router as prompt_router
 import os
 
-# Create database tables
-Base.metadata.create_all(bind=engine)
+# Create database tables on startup
+create_tables()
 
 app = FastAPI(
     title="Auto Email Classification API",
@@ -24,6 +26,8 @@ app.add_middleware(
 
 # Include routers
 app.include_router(email_router, prefix="/api/emails", tags=["emails"])
+app.include_router(historico_router, prefix="/api", tags=["historico"])
+app.include_router(prompt_router, prefix="/api/prompts", tags=["prompts"])
 
 @app.get("/")
 async def root():

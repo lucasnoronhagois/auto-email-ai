@@ -91,16 +91,19 @@ class FreeAIService:
         # Determinar classificação baseada na importância para empresa
         if business_importance_score > spam_score:
             category = "Produtivo"
-            confidence = min(0.95, 0.6 + (business_importance_score * 0.05))
+            confidence = min(0.90, 0.6 + (business_importance_score * 0.03))  # Reduzido para evitar > 100%
         else:
             category = "Improdutivo"
-            confidence = min(0.95, 0.6 + (spam_score * 0.05))
+            confidence = min(0.90, 0.6 + (spam_score * 0.03))  # Reduzido para evitar > 100%
         
         # Ajustar confiança baseado na qualidade do conteúdo
         if is_short:
             confidence *= 0.8
         elif has_business_context and has_professional_tone:
-            confidence *= 1.1  # Aumentar confiança para emails profissionais
+            confidence = min(0.95, confidence * 1.1)  # Aumentar confiança para emails profissionais, mas limitar a 95%
+        
+        # Garantir que a confiança nunca passe de 100% (1.0)
+        confidence = min(1.0, confidence)
         
         processing_time = time.time() - start_time
         
@@ -197,16 +200,33 @@ class FreeAIService:
                     response = client.chat.completions.create(
                         model=model,
                         messages=[{"role": "user", "content": prompt}],
-                        max_tokens=200,
+                        max_tokens=500,  # Balanceado para evitar rate limits
                         temperature=0.7
                     )
                     
                     result = response.choices[0].message.content.strip()
-                    print(f"✅ Resposta gerada com sucesso usando modelo: {model}")
+                    # print(f"✅ Resposta gerada com sucesso usando modelo: {model}")  # Log reduzido
                     return result
                     
                 except Exception as e:
-                    print(f"❌ Modelo {model} falhou: {e}")
+                    error_msg = str(e).lower()
+                    if "rate limit" in error_msg or "429" in error_msg:
+                        # print(f"⚠️ Rate limit atingido para {model}. Tentando com menos tokens...")  # Log reduzido
+                        # Tentar com menos tokens em caso de rate limit
+                        try:
+                            response = client.chat.completions.create(
+                                model=model,
+                                messages=[{"role": "user", "content": prompt}],
+                                max_tokens=200,  # Fallback para menos tokens
+                                temperature=0.7
+                            )
+                            result = response.choices[0].message.content.strip()
+                            # print(f"✅ Resposta gerada com sucesso (fallback) usando modelo: {model}")  # Log reduzido
+                            return result
+                        except Exception as fallback_error:
+                            print(f"❌ Fallback também falhou para {model}: {fallback_error}")
+                    else:
+                        print(f"❌ Modelo {model} falhou: {e}")
                     continue
             
             # Se nenhum modelo funcionar
@@ -241,7 +261,7 @@ class FreeAIService:
                         "stream": False,
                         "options": {
                             "temperature": 0.7,
-                            "num_predict": 200
+                            "num_predict": 800
                         }
                     }
                     

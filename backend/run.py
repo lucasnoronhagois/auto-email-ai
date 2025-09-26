@@ -27,5 +27,5 @@ if __name__ == "__main__":
         host=host,
         port=port,
         reload=debug,
-        log_level="info" if debug else "warning"
+        log_level="warning"  # Reduzido para menos logs
     )

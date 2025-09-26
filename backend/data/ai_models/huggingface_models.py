@@ -14,7 +14,14 @@ HUGGINGFACE_GENERATION_MODELS = [
 
 # Configurações padrão para Hugging Face
 HUGGINGFACE_DEFAULT_CONFIG = {
-    "max_tokens": 200,
+    "max_tokens": 500,  # Balanceado: respostas completas sem exceder limites
     "temperature": 0.7,
     "base_url": "https://router.huggingface.co/v1"
+}
+
+# Configurações para diferentes tipos de resposta
+HUGGINGFACE_CONFIGS = {
+    "short": {"max_tokens": 200, "temperature": 0.7},    # Respostas rápidas
+    "medium": {"max_tokens": 500, "temperature": 0.7},   # Respostas balanceadas (padrão)
+    "long": {"max_tokens": 800, "temperature": 0.7},     # Respostas detalhadas
 }

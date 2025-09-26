@@ -9,3 +9,8 @@ openai
 requests
 transformers
 torch
+psycopg2-binary
+redis
+alembic
+PyMySQL
+cryptography

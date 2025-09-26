@@ -8,7 +8,7 @@ class EmailService:
         self.db = db
 
     def create_email(self, email_data: EmailCreate) -> Email:
-        db_email = Email(**email_data.dict())
+        db_email = Email(**email_data.model_dump())
         self.db.add(db_email)
         self.db.commit()
         self.db.refresh(db_email)

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { UploadSection } from './components/UploadSection.jsx';
 import { ResultsSection } from './components/ResultsSection.jsx';
 import { HistorySection } from './components/HistorySection.jsx';
+import { PromptManager } from './components/PromptManager.jsx';
 import { Header } from './components/Header.jsx';
 import { TabNavigation } from './components/TabNavigation.jsx';
 
@@ -42,6 +43,10 @@ function App() {
             
             {activeTab === 'history' && (
               <HistorySection />
+            )}
+            
+            {activeTab === 'prompts' && (
+              <PromptManager />
             )}
           </div>
         </div>

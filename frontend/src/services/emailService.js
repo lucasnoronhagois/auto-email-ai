@@ -47,6 +47,13 @@ export const emailService = {
     return response.data;
   },
 
+  async getHistorico(skip = 0, limit = 100) {
+    const response = await api.get('/historico', {
+      params: { skip, limit },
+    });
+    return response.data;
+  },
+
   async getEmailWithClassification(emailId) {
     const response = await api.get(`/emails/${emailId}`);
     return response.data;

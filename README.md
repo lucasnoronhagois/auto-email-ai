@@ -1,276 +1,376 @@
-# Auto Email AI
+# AutoU - Sistema de Classificação Automática de Emails
 
-Sistema inteligente de classificação e resposta automática de emails usando IA. Desenvolvido para automatizar o processamento de emails corporativos, classificando-os como produtivos ou improdutivos e gerando respostas automáticas contextuais.
+Sistema inteligente para classificação automática de emails como Produtivo ou Improdutivo, com geração de respostas sugeridas usando IA.
 
-## Funcionalidades
+## Características
 
-### **Classificação Inteligente**
-- **Análise por palavras-chave** organizadas por categorias
-- **Detecção de tópicos específicos** (reuniões, projetos, vendas, etc.)
-- **Classificação multilíngue** (português, inglês e outros idiomas)
-- **Sistema de pontuação** baseado na importância empresarial
+- **Classificação Automática**: IA + NLP para classificar emails
+- **Geração de Respostas**: Sugestões personalizadas baseadas no conteúdo
+- **Interface Web**: Frontend React com design moderno
+- **API REST**: Backend FastAPI com documentação automática
+- **Banco de Dados**: PostgreSQL com relacionamentos otimizados
+- **Docker**: Deploy completo com containers
+- **Interface de Banco**: pgAdmin para gerenciamento visual
 
-### **Respostas Automáticas**
-- **IA para geração dinâmica** (Hugging Face, Ollama)
-- **Templates organizados por categoria** como fallback
-- **Respostas contextualizadas** por tipo de email
-- **Tom corporativo profissional** em todas as respostas
+## Arquitetura
 
-### **Arquitetura Robusta**
-- **Backend**: Python + FastAPI
-- **Frontend**: React + Vite
-- **Banco de dados**: MySQL/SQLite
-- **IA**: Hugging Face Inference API + Ollama
-- **Estrutura organizacional** profissional
+### Backend (FastAPI)
+- **API REST** com documentação automática
+- **Classificação IA** usando Hugging Face e Ollama
+- **Banco PostgreSQL** com relacionamentos
+- **Processamento NLP** para análise de conteúdo
+- **Geração de respostas** baseada em templates e IA
 
-## Tecnologias
+### Frontend (React + Vite)
+- **Interface moderna** com Tailwind CSS
+- **Upload de arquivos** e texto
+- **Visualização de resultados** em tempo real
+- **Histórico de classificações**
+- **Design responsivo**
 
-### **Backend**
-- **Python 3.11+**
-- **FastAPI** - Framework web moderno
-- **SQLAlchemy** - ORM para banco de dados
-- **Pydantic** - Validação de dados
-- **Uvicorn** - Servidor ASGI
+### Banco de Dados
+- **PostgreSQL** como banco principal
+- **Redis** para cache e sessões
+- **Relacionamentos** entre emails e classificações
+- **pgAdmin** para interface visual
 
-### **Frontend**
-- **React 18**
-- **Vite** - Build tool rápido
-- **Tailwind CSS** - Framework CSS
-- **Axios** - Cliente HTTP
+## Instalação e Configuração
 
-### **IA e NLP**
-- **Hugging Face** - Modelos de IA gratuitos
-- **Ollama** - Modelos locais
-- **Classificação por palavras-chave** - Sistema próprio
-- **Prompts estruturados** - Respostas contextualizadas
+### Pré-requisitos
+- Python 3.11+
+- Node.js 18+
+- Docker e Docker Compose
+- Git
 
-### **Banco de Dados**
-- **MySQL** - Produção
-- **SQLite** - Desenvolvimento
-- **Docker** - Containerização
+### Configuração Rápida
+
+#### Opção 1: Docker (Recomendado)
+```bash
+# Clone o repositório
+git clone <repository-url>
+cd Case-AutoU
+
+# Configurar e iniciar tudo
+.\setup_postgresql.bat
+# Escolha opção 1 (PostgreSQL com Docker)
+
+# Ou iniciar tudo de uma vez
+.\build_and_run.bat
+```
+
+#### Opção 2: Desenvolvimento Local
+```bash
+# Backend
+cd backend
+python -m venv venv
+.\venv\Scripts\activate
+pip install -r requirements.txt
+python run.py
+
+# Frontend (em outro terminal)
+cd frontend
+npm install
+npm run dev
+```
+
+### Configuração Manual
+
+#### 1. Banco de Dados
+```bash
+# Iniciar PostgreSQL e Redis
+.\start_database.bat
+
+# Ou manualmente
+docker-compose up -d postgres redis
+```
+
+#### 2. Configurar Ambiente
+```bash
+# Copiar configuração PostgreSQL
+copy backend\env_postgresql_example.txt backend\.env
+
+# Inicializar banco
+cd backend
+.\venv\Scripts\activate
+python db_manager.py init
+```
+
+#### 3. Iniciar Serviços
+```bash
+# Backend
+cd backend
+.\venv\Scripts\activate
+python run.py
+
+# Frontend
+cd frontend
+npm run dev
+```
+
+## Uso
+
+### Acessos
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **Documentação API**: http://localhost:8000/docs
+- **pgAdmin**: http://localhost:5050
+
+### Credenciais pgAdmin
+- **Email**: admin@autou.com
+- **Senha**: admin123
+
+### Configuração do Servidor PostgreSQL no pgAdmin
+- **Host**: postgres
+- **Port**: 5432
+- **Database**: autou_db
+- **Username**: autou_user
+- **Password**: autou_password
+
+### Como Usar
+1. **Acesse** http://localhost:3000
+2. **Cole um texto** de email ou faça upload de arquivo
+3. **Aguarde** a classificação automática
+4. **Veja o resultado** com confiança e resposta sugerida
+5. **Copie** a resposta sugerida se necessário
 
 ## Estrutura do Projeto
 
 ```
-auto-email-ai/
-├── backend/                    # Backend Python
-│   ├── data/                   # Dados estáticos organizados
-│   │   ├── keywords/           # Palavras-chave por categoria
-│   │   ├── prompts/            # Prompts para IA
-│   │   ├── templates/          # Templates de resposta
-│   │   └── ai_models/          # Configurações de modelos
-│   ├── services/               # Lógica de negócio
-│   ├── models/                 # Modelos de banco
-│   ├── schemas/                # Schemas Pydantic
-│   ├── controllers/            # Endpoints da API
-│   └── config/                 # Configurações
-├── frontend/                   # Frontend React
-│   ├── src/
-│   │   ├── components/         # Componentes React
-│   │   ├── services/           # Serviços de API
-│   │   └── styles/             # Estilos CSS
-│   └── public/                 # Arquivos estáticos
-├── .vscode/                    # Configurações do VS Code
-└── README.md                   # Documentação
+Case-AutoU/
+├── backend/                 # API FastAPI
+│   ├── config/             # Configurações
+│   ├── controllers/        # Controladores da API
+│   ├── models/            # Modelos do banco
+│   ├── services/          # Serviços de negócio
+│   ├── schemas/           # Schemas Pydantic
+│   ├── data/              # Dados e templates
+│   └── requirements.txt   # Dependências Python
+├── frontend/              # Interface React
+│   ├── src/              # Código fonte
+│   ├── components/       # Componentes React
+│   └── package.json      # Dependências Node
+├── docker-compose.yml    # Orquestração Docker
+├── setup_postgresql.bat  # Script de configuração
+└── build_and_run.bat     # Script de deploy
 ```
 
-## Instalação
+## Banco de Dados
 
-### **Pré-requisitos**
-- Python 3.11+
-- Node.js 18+
-- Docker (opcional)
+### Tabelas
 
-### **1. Clone o repositório**
+#### emails
+- `id` - Chave primária
+- `subject` - Assunto do email
+- `content` - Conteúdo do email
+- `sender` - Remetente
+- `recipient` - Destinatário
+- `file_name` - Nome do arquivo
+- `file_type` - Tipo do arquivo
+- `created_at` - Data de criação
+- `updated_at` - Data de atualização
+
+#### classifications
+- `id` - Chave primária
+- `email_id` - FK para emails
+- `category` - Categoria (Produtivo/Improdutivo)
+- `confidence_score` - Score de confiança (0-100%)
+- `suggested_response` - Resposta sugerida
+- `processing_time` - Tempo de processamento
+- `created_at` - Data de criação
+- `updated_at` - Data de atualização
+
+### Relacionamentos
+- Um email pode ter múltiplas classificações
+- Uma classificação pertence a um email
+- Relacionamento 1:N entre emails e classifications
+
+## Scripts Disponíveis
+
+### Windows (.bat)
+- `setup_postgresql.bat` - Configurar ambiente PostgreSQL
+- `build_and_run.bat` - Build e deploy completo
+- `start_database.bat` - Iniciar apenas banco de dados
+- `start_pgadmin.bat` - Iniciar interface do banco
+
+### Comandos Manuais
 ```bash
-git clone https://github.com/lucasnoronhagois/auto-email-ai.git
-cd auto-email-ai
-```
-
-### **2. Backend Setup**
-```bash
+# Backend
 cd backend
+python run.py
 
-# Criar ambiente virtual
-python -m venv venv
+# Frontend
+cd frontend
+npm run dev
 
-# Ativar ambiente virtual
-# Windows:
-venv\Scripts\activate
-# Linux/Mac:
-source venv/bin/activate
+# Docker
+docker-compose up --build -d
 
-# Instalar dependências
+# Banco
+python db_manager.py init
+python db_manager.py info
+```
+
+## Configuração de Ambiente
+
+### Variáveis de Ambiente (.env)
+```env
+# Database
+DATABASE_URL=postgresql://autou_user:autou_password@localhost:5432/autou_db
+
+# Server
+HOST=0.0.0.0
+PORT=8000
+DEBUG=True
+
+# AI Services
+OPENAI_API_KEY=your_key_here
+HF_TOKEN=your_token_here
+
+# Security
+SECRET_KEY=your_secret_key
+```
+
+## Docker
+
+### Serviços
+- **postgres**: Banco PostgreSQL
+- **redis**: Cache Redis
+- **backend**: API FastAPI
+- **frontend**: Interface React + Nginx
+- **pgadmin**: Interface do banco
+
+### Comandos Docker
+```bash
+# Iniciar tudo
+docker-compose up --build -d
+
+# Apenas banco
+docker-compose up -d postgres redis
+
+# Ver logs
+docker-compose logs -f
+
+# Parar
+docker-compose down
+```
+
+## Desenvolvimento
+
+### Estrutura de Desenvolvimento
+- **Backend**: FastAPI com hot reload
+- **Frontend**: Vite com hot reload
+- **Banco**: PostgreSQL com pgAdmin
+- **Logs**: Reduzidos para desenvolvimento
+
+### Comandos de Desenvolvimento
+```bash
+# Backend com hot reload
+cd backend
+python run.py
+
+# Frontend com hot reload
+cd frontend
+npm run dev
+
+# Verificar banco
+python db_manager.py info
+```
+
+## Troubleshooting
+
+### Problemas Comuns
+
+#### 1. Erro de Conexão com Banco
+```bash
+# Verificar se PostgreSQL está rodando
+docker-compose ps postgres
+
+# Reiniciar banco
+docker-compose restart postgres
+```
+
+#### 2. Frontend Não Carrega
+```bash
+# Reinstalar dependências
+cd frontend
+npm install
+
+# Limpar cache
+npm run build
+```
+
+#### 3. Backend Não Inicia
+```bash
+# Verificar ambiente virtual
+cd backend
+.\venv\Scripts\activate
+
+# Reinstalar dependências
 pip install -r requirements.txt
 ```
 
-### **3. Frontend Setup**
+#### 4. pgAdmin Não Acessa
 ```bash
-cd frontend
+# Verificar se está rodando
+docker-compose ps pgadmin
 
-# Instalar dependências
-npm install
+# Reiniciar pgAdmin
+docker-compose restart pgadmin
 ```
 
-### **4. Configuração do Banco**
+### Logs e Debug
 ```bash
-# Usar SQLite (padrão) ou MySQL com Docker
-docker run --name mysql-autou -e MYSQL_ROOT_PASSWORD=password -e MYSQL_DATABASE=autou_db -p 3308:3306 -d mysql:8.0
+# Ver logs do Docker
+docker-compose logs -f
+
+# Ver logs específicos
+docker-compose logs -f backend
+docker-compose logs -f frontend
+
+# Verificar status
+docker-compose ps
 ```
 
-### **5. Variáveis de Ambiente**
-Crie um arquivo `.env` na raiz do projeto:
-```env
-DATABASE_URL=sqlite:///./autou.db
-# ou para MySQL:
-# DATABASE_URL=mysql+pymysql://root:password@localhost:3308/autou_db
+## Performance
 
-SECRET_KEY=sua-chave-secreta-aqui
-DEBUG=True
+### Otimizações Implementadas
+- **Frontend**: Minificação, code splitting, gzip
+- **Backend**: Connection pooling, cache
+- **Banco**: Índices otimizados, relacionamentos
+- **Docker**: Multi-stage builds, layers otimizadas
 
-# Opcional - Hugging Face Token
-HF_TOKEN=seu-token-huggingface
-```
+### Métricas
+- **Tempo de classificação**: ~1-2 segundos
+- **Confiança**: 60-95%
+- **Tamanho da imagem**: ~250MB total
+- **Tempo de build**: ~3-5 minutos
 
-## Execução
+## Segurança
 
-### **Backend**
-```bash
-cd backend
-venv\Scripts\activate  # Windows
-python run.py
-```
-Servidor rodando em: `http://localhost:8000`
+### Implementado
+- Usuários não-root nos containers
+- Headers de segurança no Nginx
+- Network isolada
+- Health checks
+- Restart policies
 
-### **Frontend**
-```bash
-cd frontend
-npm run dev
-```
-Aplicação rodando em: `http://localhost:5173`
-
-### **Scripts Automatizados**
-```bash
-# Windows
-start_backend.bat
-start_frontend.bat
-```
-
-## Como Funciona
-
-### **1. Classificação de Emails**
-- **Upload** de arquivo (.txt, .pdf) ou texto direto
-- **Análise** por palavras-chave organizadas por categoria
-- **Detecção** de tópicos específicos (reuniões, projetos, etc.)
-- **Classificação** como "Produtivo" ou "Improdutivo"
-
-### **2. Geração de Respostas**
-- **IA primeiro**: Tenta gerar resposta contextualizada
-- **Fallback**: Usa templates organizados por categoria
-- **Respostas específicas**: Por tipo de email detectado
-- **Tom corporativo**: Profissional em todos os casos
-
-### **3. Categorias Suportadas**
-
-#### **Emails Produtivos**
-- **Meetings** - Reuniões e compromissos
-- **Projects** - Projetos e tarefas
-- **Sales/Business** - Propostas comerciais
-- **Financial** - Questões financeiras
-- **HR/Recruitment** - Recrutamento
-- **Technology** - Questões técnicas
-- **Strategy/Planning** - Planejamento estratégico
-- **Urgent/Important** - Assuntos urgentes
-
-#### **Emails Improdutivos**
-- **Spam/Promotions** - Promoções e spam
-- **Personal Greetings** - Mensagens pessoais
-- **Scams/Fraud** - Golpes e fraudes
-- **Adult Content** - Conteúdo inadequado
-- **Social Media** - Convites de redes sociais
-
-## Configuração Avançada
-
-### **Modelos de IA**
-O sistema suporta múltiplos provedores:
-
-#### **Hugging Face (Gratuito)**
-- Llama 3.1/3.2 Instruct
-- Microsoft Phi-4 Mini
-- SmolLM3
-- Configurável em `data/ai_models/huggingface_models.py`
-
-#### **Ollama (Local)**
-- Modelos Llama locais
-- Phi-3 Mini
-- Configurável em `data/ai_models/ollama_models.py`
-
-### **Personalização**
-- **Palavras-chave**: Editar em `data/keywords/`
-- **Prompts**: Modificar em `data/prompts/`
-- **Templates**: Ajustar em `data/templates/`
-
-## API Endpoints
-
-### **Emails**
-- `POST /api/emails/upload-file` - Upload de arquivo
-- `POST /api/emails/upload-text` - Texto direto
-- `GET /api/emails/` - Listar emails
-- `GET /api/emails/{id}` - Buscar email específico
-
-### **Classificações**
-- `GET /api/classifications/` - Listar classificações
-- `GET /api/classifications/{id}` - Buscar classificação
-
-## Exemplos de Uso
-
-### **Email de Reunião**
-```
-Input: "Olá, gostaria de agendar uma reunião para discutir o projeto X"
-Output: "Produtivo - Meetings"
-Resposta: "Prezado(a), agradecemos o convite para a reunião. Nossa equipe analisará a proposta e retornaremos com nossa disponibilidade em até 24 horas. Atenciosamente, Equipe Comercial."
-```
-
-### **Email de Natal**
-```
-Input: "Feliz Natal e um próspero ano novo!"
-Output: "Improdutivo - Personal Greetings"
-Resposta: "Prezado(a), agradecemos suas felicitações e carinho. Atenciosamente, Departamento de Relacionamento."
-```
-
-## Contribuição
-
-1. **Fork** o projeto
-2. **Crie** uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. **Push** para a branch (`git push origin feature/AmazingFeature`)
-5. **Abra** um Pull Request
+### Recomendações para Produção
+- Use secrets para senhas
+- Configure SSL/TLS
+- Implemente rate limiting
+- Configure backup automático
+- Monitore logs de segurança
 
 ## Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
 
-## Autor
+## Changelog
 
-**Lucas Noronha Gois**
-- GitHub: [@lucasnoronhagois](https://github.com/lucasnoronhagois)
-- LinkedIn: [Lucas Noronha](https://linkedin.com/in/lucasnoronhagois)
-
-## Agradecimentos
-
-- **Hugging Face** - Modelos de IA gratuitos
-- **FastAPI** - Framework web moderno
-- **React** - Biblioteca para interfaces
-- **Tailwind CSS** - Framework CSS utilitário
-
-## Suporte
-
-Se você encontrar algum problema ou tiver dúvidas:
-
-1. **Verifique** os [Issues](https://github.com/lucasnoronhagois/auto-email-ai/issues)
-2. **Crie** um novo issue se necessário
-3. **Entre em contato** via LinkedIn
-
----
-
-**Se este projeto foi útil para você, considere dar uma estrela!**
+### v1.0.0
+- Sistema de classificação automática
+- Interface web completa
+- Integração com PostgreSQL
+- Deploy com Docker
+- Interface pgAdmin
+- Geração de respostas com IA

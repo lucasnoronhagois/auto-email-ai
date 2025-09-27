@@ -48,9 +48,9 @@ def get_db():
 def create_tables():
     """Cria todas as tabelas no banco de dados"""
     Base.metadata.create_all(bind=engine)
-    print("✅ Tabelas criadas com sucesso!")
+    print("Tabelas criadas com sucesso!")
 
 def drop_tables():
     """Remove todas as tabelas do banco de dados"""
     Base.metadata.drop_all(bind=engine)
-    print("🗑️ Tabelas removidas com sucesso!")
+    print("Tabelas removidas com sucesso!")

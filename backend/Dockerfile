@@ -1,4 +1,4 @@
-# Dockerfile para Backend AutoU
+# Dockerfile para Backend
 FROM python:3.11-slim
 
 # Definir variáveis de ambiente

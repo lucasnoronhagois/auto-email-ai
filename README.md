@@ -1,4 +1,4 @@
-# AutoU - Sistema de Classificação Inteligente de E-mails
+# Auto Mail IA - Sistema de Classificação Inteligente de E-mails
 
 Sistema inteligente para classificação automática de e-mails como Produtivo ou Improdutivo, com geração de respostas sugeridas baseadas em contexto e padrões.
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Gerenciador de banco de dados para AutoU
+Gerenciador de banco de dados
 Permite criar, migrar e gerenciar o banco de dados
 """
 
@@ -21,42 +21,42 @@ from models.historico import Historico
 
 def init_database():
     """Inicializa o banco de dados criando todas as tabelas"""
-    print("🚀 Inicializando banco de dados...")
+    print("Inicializando banco de dados...")
     try:
         create_tables()
-        print("✅ Banco de dados inicializado com sucesso!")
+        print("Banco de dados inicializado com sucesso!")
         return True
     except Exception as e:
-        print(f"❌ Erro ao inicializar banco de dados: {e}")
+        print(f"Erro ao inicializar banco de dados: {e}")
         return False
 
 def reset_database():
     """Reseta o banco de dados (remove e recria todas as tabelas)"""
-    print("🔄 Resetando banco de dados...")
+    print("Resetando banco de dados...")
     try:
         drop_tables()
         create_tables()
-        print("✅ Banco de dados resetado com sucesso!")
+        print("Banco de dados resetado com sucesso!")
         return True
     except Exception as e:
-        print(f"❌ Erro ao resetar banco de dados: {e}")
+        print(f" Erro ao resetar banco de dados: {e}")
         return False
 
 def check_database_connection():
     """Verifica se a conexão com o banco de dados está funcionando"""
-    print("🔍 Verificando conexão com banco de dados...")
+    print("Verificando conexão com banco de dados...")
     try:
         with engine.connect() as connection:
             result = connection.execute(text("SELECT 1"))
-            print("✅ Conexão com banco de dados estabelecida!")
+            print("Conexão com banco de dados estabelecida!")
             return True
     except Exception as e:
-        print(f"❌ Erro na conexão com banco de dados: {e}")
+        print(f" Erro na conexão com banco de dados: {e}")
         return False
 
 def show_database_info():
     """Mostra informações sobre o banco de dados"""
-    print("📊 Informações do banco de dados:")
+    print("Informações do banco de dados:")
     print(f"   URL: {engine.url}")
     print(f"   Driver: {engine.url.drivername}")
     
@@ -107,32 +107,32 @@ def create_sample_data():
         db.add(sample_classification)
         db.commit()
         
-        print("✅ Dados de exemplo criados com sucesso!")
+        print("Dados de exemplo criados com sucesso!")
         return True
         
     except Exception as e:
-        print(f"❌ Erro ao criar dados de exemplo: {e}")
+        print(f" Erro ao criar dados de exemplo: {e}")
         return False
     finally:
         db.close()
 
 def seed_prompts_templates():
     """Popula as tabelas de prompts e templates com dados iniciais"""
-    print("🌱 Populando prompts e templates...")
+    print("Populando prompts e templates...")
     try:
         from seed_prompts_templates import main as seed_main
         seed_main()
-        print("✅ Prompts e templates populados com sucesso!")
+        print("Prompts e templates populados com sucesso!")
         return True
     except Exception as e:
-        print(f"❌ Erro ao popular prompts e templates: {e}")
+        print(f" Erro ao popular prompts e templates: {e}")
         return False
 
 def main():
     """Função principal do gerenciador de banco de dados"""
     if len(sys.argv) < 2:
         print("""
-🗄️  Gerenciador de Banco de Dados - AutoU
+Gerenciador de Banco de Dados
 
 Uso: python db_manager.py <comando>
 
@@ -158,11 +158,11 @@ Exemplos:
     if command == "init":
         init_database()
     elif command == "reset":
-        confirm = input("⚠️  Tem certeza que deseja resetar o banco de dados? (y/N): ")
+        confirm = input("Tem certeza que deseja resetar o banco de dados? (y/N): ")
         if confirm.lower() in ['y', 'yes', 'sim']:
             reset_database()
         else:
-            print("❌ Operação cancelada.")
+            print(" Operação cancelada.")
     elif command == "check":
         check_database_connection()
     elif command == "info":
@@ -174,7 +174,7 @@ Exemplos:
     elif command == "help":
         main()
     else:
-        print(f"❌ Comando '{command}' não reconhecido.")
+        print(f" Comando '{command}' não reconhecido.")
         print("Use 'python db_manager.py help' para ver os comandos disponíveis.")
 
 if __name__ == "__main__":

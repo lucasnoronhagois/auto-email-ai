@@ -34,7 +34,7 @@ app.include_router(prompt_router, prefix="/api/prompts", tags=["prompts"])
 @app.get("/")
 async def root():
     return {
-        "message": "AutoU Email Classification API",
+        "message": "Email Classification API",
         "version": "1.0.0",
         "docs": "/docs"
     }

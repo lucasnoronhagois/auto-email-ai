@@ -1,20 +1,20 @@
 @echo off
-echo 🐘 pgAdmin - Interface Web para PostgreSQL
+echo pgAdmin - Interface Web para PostgreSQL
 echo.
 
-echo 🚀 Iniciando pgAdmin...
+echo Iniciando pgAdmin...
 docker-compose up -d pgadmin
 
 echo.
-echo ⏳ Aguardando pgAdmin inicializar...
+echo Aguardando pgAdmin inicializar...
 timeout /t 10 /nobreak > nul
 
 echo.
-echo ✅ pgAdmin iniciado com sucesso!
+echo pgAdmin iniciado com sucesso!
 echo.
-echo 🌐 Acesse: http://localhost:5050
+echo Acesse: http://localhost:5050
 echo.
-echo 📋 Credenciais de Login:
+echo Credenciais de Login:
 echo    Email: admin@autou.com
 echo    Senha: admin123
 echo.

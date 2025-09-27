@@ -65,23 +65,9 @@ export const promptService = {
     if (category) params.category = category;
     
     const response = await api.get('/prompts/', { params });
-    console.log('🔍 Resposta completa da API:', response.data);
-    console.log('🔍 Tipo da resposta:', typeof response.data);
-    console.log('🔍 Chaves da resposta:', Object.keys(response.data));
     
     // A API retorna {value: [...], Count: number}, então precisamos acessar response.data.value
     const result = response.data.value || response.data;
-    console.log('🔍 Resultado final:', result);
-    console.log('🔍 Tipo do resultado:', typeof result);
-    console.log('🔍 É array?', Array.isArray(result));
-    console.log('🔍 Tamanho:', result?.length);
-    
-    // Verificar as categorias dos primeiros itens
-    if (result && result.length > 0) {
-      console.log('🔍 Primeiro item:', result[0]);
-      console.log('🔍 Categoria do primeiro item:', result[0].category);
-      console.log('🔍 Todas as categorias:', result.map((p: Prompt) => p.category));
-    }
     
     return result;
   },

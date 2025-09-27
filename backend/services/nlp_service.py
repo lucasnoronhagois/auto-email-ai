@@ -9,30 +9,30 @@ class NLPService:
         }
 
     def preprocess_text(self, text: str) -> str:
-        """Preprocess text for classification"""
+        """Pré-processar texto para classificação"""
         if not text:
             return ""
         
-        # Convert to lowercase
+        # Converter para minúsculas
         text = text.lower()
         
-        # Remove special characters and numbers
+        # Remover caracteres especiais e números
         text = re.sub(r'[^a-zA-Záàâãéèêíìîóòôõúùûç\s]', ' ', text)
         
-        # Remove extra whitespaces
+        # Remover espaços extras
         text = re.sub(r'\s+', ' ', text).strip()
         
         return text
 
     def tokenize_and_clean(self, text: str) -> List[str]:
-        """Tokenize text and remove stop words"""
+        """Tokenizar texto e remover palavras de parada"""
         if not text:
             return []
         
-        # Simple tokenization
+        # Tokenização simples
         tokens = re.findall(r'\b\w+\b', text.lower())
         
-        # Remove stop words and short words
+        # Remover palavras de parada e palavras curtas
         cleaned_tokens = [
             token 
             for token in tokens 
@@ -42,7 +42,7 @@ class NLPService:
         return cleaned_tokens
 
     def extract_features(self, text: str) -> Dict[str, any]:
-        """Extract features from text for classification"""
+        """Extrair características do texto para classificação"""
         processed_text = self.preprocess_text(text)
         tokens = self.tokenize_and_clean(processed_text)
         
@@ -57,10 +57,10 @@ class NLPService:
 
 
     def is_productive_content(self, text: str) -> Dict[str, any]:
-        """Determine if content is productive based on keywords and patterns"""
+        """Determinar se o conteúdo é produtivo baseado em palavras-chave e padrões"""
         processed_text = self.preprocess_text(text)
         
-        # Keywords that indicate productive content
+        # Palavras-chave que indicam conteúdo produtivo
         productive_keywords = [
             'reunião', 'projeto', 'trabalho', 'negócio', 'cliente', 'venda', 'proposta',
             'contrato', 'entrega', 'prazo', 'objetivo', 'meta', 'resultado', 'relatório',
@@ -68,7 +68,7 @@ class NLPService:
             'serviço', 'marketing', 'vendas', 'financeiro', 'orçamento', 'planejamento'
         ]
         
-        # Keywords that indicate unproductive content
+        # Palavras-chave que indicam conteúdo improdutivo
         unproductive_keywords = [
             'spam', 'promoção', 'desconto', 'oferta', 'loteria', 'sorteio', 'gratuito',
             'urgente', 'limitado', 'exclusivo', 'não perca', 'última chance',
@@ -78,11 +78,11 @@ class NLPService:
         productive_count = sum(1 for keyword in productive_keywords if keyword in processed_text)
         unproductive_count = sum(1 for keyword in unproductive_keywords if keyword in processed_text)
         
-        # Calculate confidence score
+        # Calcular pontuação de confiança
         total_keywords = productive_count + unproductive_count
         if total_keywords == 0:
             confidence = 0.5
-            category = "Produtivo"  # Default to productive if no keywords found
+            category = "Produtivo"  # Padrão para produtivo se nenhuma palavra-chave for encontrada
         else:
             confidence = abs(productive_count - unproductive_count) / total_keywords
             category = "Produtivo" if productive_count > unproductive_count else "Improdutivo"

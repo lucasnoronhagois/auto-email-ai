@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Script para executar o servidor AutoU
+Script para executar o servidor
 """
 
 import uvicorn
@@ -16,11 +16,11 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
     debug = os.getenv("DEBUG", "True").lower() == "true"
     
-    print(f"🚀 Iniciando Auto Server...")
-    print(f"📍 Host: {host}")
-    print(f"🔌 Port: {port}")
-    print(f"🐛 Debug: {debug}")
-    print(f"📚 Docs: http://{host}:{port}/docs")
+    print(f"Iniciando Auto Server...")
+    print(f"Host: {host}")
+    print(f"Port: {port}")
+    print(f"Debug: {debug}")
+    print(f"Docs: http://{host}:{port}/docs")
     
     uvicorn.run(
         "main:app",

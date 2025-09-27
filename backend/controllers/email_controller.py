@@ -23,12 +23,12 @@ async def upload_text_email(
     recipient: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
-    """Process email from direct text input"""
+    """Processar email a partir de entrada de texto direta"""
     try:
         if not content.strip():
             raise HTTPException(status_code=400, detail="Conteúdo do email é obrigatório")
         
-        # Create email record
+        # Criar registro do email
         email_service = EmailService(db)
         email_data = EmailCreate(
             subject=subject,
@@ -38,7 +38,7 @@ async def upload_text_email(
         )
         email = email_service.create_email(email_data)
         
-        # Process classification
+        # Processar classificação
         result = await process_email_classification(email, db)
         return result
     except Exception as e:
@@ -53,21 +53,21 @@ async def upload_file_email(
     recipient: Optional[str] = Form(None),
     db: Session = Depends(get_db)
 ):
-    """Process email from uploaded file"""
-    # Validate file
+    """Processar email a partir de arquivo enviado"""
+    # Validar arquivo
     file_service = FileService()
     is_valid, message = file_service.validate_file(file.filename, file.size)
     if not is_valid:
         raise HTTPException(status_code=400, detail=message)
     
-    # Extract text from file
+    # Extrair texto do arquivo
     file_content = await file.read()
     content = file_service.extract_text_from_file(file_content, file.filename)
     
     if not content:
         raise HTTPException(status_code=400, detail="Não foi possível extrair texto do arquivo")
     
-    # Create email record
+    # Criar registro do email
     email_service = EmailService(db)
     email_data = EmailCreate(
         subject=subject,
@@ -79,30 +79,30 @@ async def upload_file_email(
     )
     email = email_service.create_email(email_data)
     
-    # Process classification
+    # Processar classificação
     result = await process_email_classification(email, db)
     return result
 
 async def process_email_classification(email, db: Session) -> EmailClassificationResponse:
-    """Process email classification using AI and NLP services"""
+    """Processar classificação de email usando serviços de IA e NLP"""
     start_time = time.time()
     
-    # Initialize services
+    # Inicializar serviços
     nlp_service = NLPService()
     ai_service = AIService(db)  # Passar sessão do banco para usar prompts híbridos
     classification_service = ClassificationService(db)
     historico_service = HistoricoService(db)
     
-    # Preprocess text with NLP
+    # Pré-processar texto com NLP
     features = nlp_service.extract_features(email.content)
     
-    # Get AI classification
+    # Obter classificação de IA
     ai_result = ai_service.classify_email(email.content)
     
-    # Generate suggested response
+    # Gerar resposta sugerida
     suggested_response = ai_service.generate_response(email.content, ai_result['category'])
     
-    # Determine subcategory
+    # Determinar subcategoria
     subcategory = None
     # Novo sistema: subcategory vem diretamente do resultado
     if ai_result.get('subcategory'):
@@ -113,7 +113,7 @@ async def process_email_classification(email, db: Session) -> EmailClassificatio
     elif ai_result['category'] == 'Improdutivo' and ai_result.get('primary_unproductive_category'):
         subcategory = ai_result['primary_unproductive_category']
     
-    # Create classification record
+    # Criar registro de classificação
     classification_data = ClassificationCreate(
         email_id=email.id,
         category=ai_result['category'],
@@ -124,7 +124,7 @@ async def process_email_classification(email, db: Session) -> EmailClassificatio
     )
     classification = classification_service.create_classification(classification_data)
     
-    # Log no histórico
+    # Registrar no histórico
     historico_service.log_email_created(
         email_id=email.id,
         classification_id=classification.id
@@ -152,7 +152,7 @@ async def get_emails(
     limit: int = 100,
     db: Session = Depends(get_db)
 ):
-    """Get all processed emails"""
+    """Obter todos os emails processados"""
     email_service = EmailService(db)
     emails = email_service.get_emails(skip=skip, limit=limit)
     return emails
@@ -162,7 +162,7 @@ async def get_email_with_classification(
     email_id: int,
     db: Session = Depends(get_db)
 ):
-    """Get email with its classification"""
+    """Obter email com sua classificação"""
     email_service = EmailService(db)
     classification_service = ClassificationService(db)
     

@@ -24,10 +24,10 @@ def seed_prompts():
         # Verificar se já existem prompts
         existing_prompts = db.query(Prompt).count()
         if existing_prompts > 0:
-            print(f"✅ Já existem {existing_prompts} prompts na base de dados")
+            print(f"Já existem {existing_prompts} prompts na base de dados")
             return
         
-        print("🌱 Populando tabela de prompts...")
+        print("Populando tabela de prompts...")
         
         # Mapeamento de tópicos para subcategorias produtivas
         productive_topic_mapping = {
@@ -129,10 +129,10 @@ def seed_prompts():
         db.add(db_prompt)
         
         db.commit()
-        print("✅ Prompts populados com sucesso!")
+        print("Prompts populados com sucesso!")
         
     except Exception as e:
-        print(f"❌ Erro ao popular prompts: {e}")
+        print(f" Erro ao popular prompts: {e}")
         db.rollback()
     finally:
         db.close()
@@ -145,10 +145,10 @@ def seed_templates():
         # Verificar se já existem templates
         existing_templates = db.query(Template).count()
         if existing_templates > 0:
-            print(f"✅ Já existem {existing_templates} templates na base de dados")
+            print(f"Já existem {existing_templates} templates na base de dados")
             return
         
-        print("🌱 Populando tabela de templates...")
+        print("Populando tabela de templates...")
         
         # Templates produtivos
         for topic, templates in PRODUCTIVE_TEMPLATES.items():
@@ -186,17 +186,17 @@ def seed_templates():
             db.add(db_template)
         
         db.commit()
-        print("✅ Templates populados com sucesso!")
+        print("Templates populados com sucesso!")
         
     except Exception as e:
-        print(f"❌ Erro ao popular templates: {e}")
+        print(f" Erro ao popular templates: {e}")
         db.rollback()
     finally:
         db.close()
 
 def main():
     """Função principal"""
-    print("🚀 Iniciando população de prompts e templates...")
+    print("Iniciando população de prompts e templates...")
     
     # Criar tabelas se não existirem
     create_tables()
@@ -207,7 +207,7 @@ def main():
     # Popular templates
     seed_templates()
     
-    print("✅ População concluída com sucesso!")
+    print("População concluída com sucesso!")
 
 if __name__ == "__main__":
     main()

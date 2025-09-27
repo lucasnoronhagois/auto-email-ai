@@ -15,7 +15,11 @@ export const SUBCATEGORY_TRANSLATIONS: Record<string, string> = {
   'personal_greetings': 'Cumprimentos Pessoais',
   'scams_fraud': 'Golpes & Fraudes',
   'adult_content': 'Conteúdo Adulto',
-  'social_media': 'Redes Sociais'
+  'social_media': 'Redes Sociais',
+  'personal_associations': 'Associações Pessoais',
+  'personal_services': 'Serviços Pessoais',
+  'local_services': 'Serviços Municipais',
+  'personal_payments': 'Pagamentos Pessoais'
 };
 
 // Função para traduzir subcategoria

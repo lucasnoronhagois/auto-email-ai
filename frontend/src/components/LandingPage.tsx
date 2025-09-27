@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { emailService, promptService } from '../services';
 import { useCopyToClipboard } from '../hooks/useCopyToClipboard';
+import ScrollToTopButton from './ScrollToTopButton';
 
 interface ClassificationResult {
   email: {
@@ -56,23 +57,43 @@ const LandingPage: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [uploadType, setUploadType] = useState<'text' | 'file'>('text');
   const [emailContent, setEmailContent] = useState<string>('');
+  
   const [emailSubject, setEmailSubject] = useState<string>('');
+  
   const [emailSender, setEmailSender] = useState<string>('');
+  
   const [emailRecipient, setEmailRecipient] = useState<string>('');
+  
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  
   const [dragActive, setDragActive] = useState<boolean>(false);
+  
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  
   const [isGeneratingNewResponse, setIsGeneratingNewResponse] = useState<boolean>(false);
+  
   const [classificationResult, setClassificationResult] = useState<ClassificationResult | null>(null);
+  
   const [activeSection, setActiveSection] = useState<'main' | 'history' | 'prompts'>('main');
+  
   const [historyData, setHistoryData] = useState<any[]>([]);
+  
   const [promptsData, setPromptsData] = useState<any[]>([]);
+  
   const [historyLoading, setHistoryLoading] = useState<boolean>(false);
+  
+  
   const [promptsLoading, setPromptsLoading] = useState<boolean>(false);
+  
   const [expandedHistoryItems, setExpandedHistoryItems] = useState<Set<number>>(new Set());
+  
   const [editingPrompt, setEditingPrompt] = useState<number | null>(null);
+  
   const [promptEditContent, setPromptEditContent] = useState<string>('');
+  
   const [activePromptTab, setActivePromptTab] = useState<'productive' | 'unproductive'>('productive');
+  
+  const [historyItemHeights, setHistoryItemHeights] = useState<Record<number, number>>({});
   
   // Hook para gerenciar cópia com feedback visual
   const { copy: copyToClipboard, isCopied } = useCopyToClipboard();
@@ -218,16 +239,10 @@ const LandingPage: React.FC = () => {
   const loadPrompts = async (): Promise<void> => {
     setPromptsLoading(true);
     try {
-      console.log('🔄 Carregando prompts...');
       const data = await promptService.getPrompts();
-      console.log('📊 Dados recebidos:', data);
-      console.log('📊 Tipo dos dados:', typeof data);
-      console.log('📊 É array?', Array.isArray(data));
-      console.log('📊 Tamanho:', data?.length);
       setPromptsData(data);
-      console.log('✅ Prompts carregados no estado');
     } catch (error) {
-      console.error('❌ Erro ao carregar prompts:', error);
+      console.error('Erro ao carregar prompts:', error);
     } finally {
       setPromptsLoading(false);
     }
@@ -253,8 +268,41 @@ const LandingPage: React.FC = () => {
       newExpanded.delete(itemId);
     } else {
       newExpanded.add(itemId);
+      // Definir altura padrão quando expandir
+      if (!historyItemHeights[itemId]) {
+        setHistoryItemHeights(prev => ({
+          ...prev,
+          [itemId]: 160 // altura padrão em pixels
+        }));
+      }
     }
     setExpandedHistoryItems(newExpanded);
+  };
+
+  const handleResizeStart = (e: React.MouseEvent, itemId: number): void => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const startY = e.clientY;
+    const startHeight = historyItemHeights[itemId] || 160;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      const deltaY = e.clientY - startY;
+      const newHeight = Math.max(120, Math.min(500, startHeight + deltaY)); // min 120px, max 500px
+      
+      setHistoryItemHeights(prev => ({
+        ...prev,
+        [itemId]: newHeight
+      }));
+    };
+    
+    const handleMouseUp = () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+    
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
   };
 
   const startEditingPrompt = (promptId: number, currentContent: string): void => {
@@ -366,7 +414,7 @@ const LandingPage: React.FC = () => {
                 <Brain className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">AutoU</h1>
+                <h1 className="text-xl font-bold text-white">AI Mail</h1>
                 <p className="text-white/60 text-xs">Classificação Inteligente</p>
               </div>
             </div>
@@ -435,12 +483,9 @@ const LandingPage: React.FC = () => {
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Teste Agora
-            </h2>
-            <p className="text-gray-300 text-lg">
+            <h3 className="text-2xl md:text-2xl font-bold text-white mb-4">
               Cole o conteúdo do e-mail ou faça upload de um arquivo para classificação instantânea
-            </p>
+            </h3>
           </div>
           
           <div className="glass-effect rounded-2xl p-8 border border-white/10">
@@ -863,8 +908,19 @@ const LandingPage: React.FC = () => {
                           {item.email_content && (
                             <div>
                               <h4 className="text-white/80 text-sm font-medium mb-2">Conteúdo do e-mail:</h4>
-                              <div className="bg-white/10 rounded-lg p-4 max-h-40 overflow-y-auto">
+                              <div 
+                                className="bg-white/10 rounded-lg p-4 overflow-y-auto relative"
+                                style={{ height: `${historyItemHeights[item.id] || 160}px` }}
+                              >
                                 <p className="text-white text-sm whitespace-pre-wrap">{item.email_content}</p>
+                                
+                                {/* Handle de redimensionamento */}
+                                <div 
+                                  className="absolute bottom-0 left-0 right-0 h-2 cursor-ns-resize hover:bg-blue-500/30 transition-colors flex items-center justify-center"
+                                  onMouseDown={(e) => handleResizeStart(e, item.id)}
+                                >
+                                  <div className="w-8 h-1 bg-white/30 rounded-full"></div>
+                                </div>
                               </div>
                             </div>
                           )}
@@ -929,8 +985,6 @@ const LandingPage: React.FC = () => {
                     }`}>
                       {(() => {
                         const count = promptsData.filter(p => p.category === 'produtivo').length;
-                        console.log('🔢 Contador produtivos:', count, 'de', promptsData.length, 'total');
-                        console.log('🔢 Categorias encontradas:', [...new Set(promptsData.map(p => p.category))]);
                         return count;
                       })()}
                     </span>
@@ -953,7 +1007,6 @@ const LandingPage: React.FC = () => {
                     }`}>
                       {(() => {
                         const count = promptsData.filter(p => p.category === 'improdutivo').length;
-                        console.log('🔢 Contador improdutivos:', count, 'de', promptsData.length, 'total');
                         return count;
                       })()}
                     </span>
@@ -995,7 +1048,9 @@ const LandingPage: React.FC = () => {
                                   
                                   {!isEditing && (
                                     <button
-                                      onClick={() => startEditingPrompt(prompt.id, prompt.content)}
+                                      onClick={() => {
+                                        startEditingPrompt(prompt.id, prompt.content);
+                                      }}
                                       className="flex items-center space-x-2 px-3 py-1 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg text-blue-400 transition-colors"
                                     >
                                       <Edit3 className="h-4 w-4" />
@@ -1079,7 +1134,9 @@ const LandingPage: React.FC = () => {
                                   
                                   {!isEditing && (
                                     <button
-                                      onClick={() => startEditingPrompt(prompt.id, prompt.content)}
+                                      onClick={() => {
+                                        startEditingPrompt(prompt.id, prompt.content);
+                                      }}
                                       className="flex items-center space-x-2 px-3 py-1 bg-blue-600/20 hover:bg-blue-600/30 border border-blue-500/30 rounded-lg text-blue-400 transition-colors"
                                     >
                                       <Edit3 className="h-4 w-4" />
@@ -1143,16 +1200,19 @@ const LandingPage: React.FC = () => {
       <footer className="border-t border-white/10 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h3 className="text-2xl font-bold text-white mb-2">AutoU</h3>
+            <h3 className="text-2xl font-bold text-white mb-2">AI Mail</h3>
             <p className="text-gray-400 mb-4">
               Classificação Inteligente de E-mails
             </p>
             <p className="text-gray-500 text-sm">
-              © 2025 AutoU. Todos os direitos reservados.
+              © 2025 AI Mail. Todos os direitos reservados.
             </p>
           </div>
         </div>
       </footer>
+
+      {/* Scroll to Top Button */}
+      <ScrollToTopButton />
     </div>
   );
 };

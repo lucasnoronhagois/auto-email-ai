@@ -9,12 +9,17 @@ import os
 # Create database tables on startup
 create_tables()
 
+# Configurar documentação baseada no ambiente
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+docs_url = "/docs" if ENVIRONMENT == "development" else None
+redoc_url = "/redoc" if ENVIRONMENT == "development" else None
+
 app = FastAPI(
     title="Auto Email Classification API",
     description="API para classificação automática de emails como Produtivo ou Improdutivo",
     version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
+    docs_url=docs_url,
+    redoc_url=redoc_url
 )
 
 # Configure CORS
@@ -33,11 +38,16 @@ app.include_router(prompt_router, prefix="/api/prompts", tags=["prompts"])
 
 @app.get("/")
 async def root():
-    return {
+    response = {
         "message": "Email Classification API",
-        "version": "1.0.0",
-        "docs": "/docs"
+        "version": "1.0.0"
     }
+    
+    # Só mostrar docs em desenvolvimento
+    if ENVIRONMENT == "development":
+        response["docs"] = "/docs"
+    
+    return response
 
 @app.get("/health")
 async def health_check():

@@ -1,5 +1,6 @@
 """
 Prompts para emails produtivos organizados por tópico
+Só usa se o banco por alguma razão não estiver funcionando
 """
 
 PRODUCTIVE_PROMPTS = {

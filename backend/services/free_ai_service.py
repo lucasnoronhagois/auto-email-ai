@@ -180,9 +180,7 @@ class FreeAIService:
         try:
             # Verificar se temos token
             hf_token = os.getenv("HF_TOKEN")
-            print(f"HF_TOKEN encontrado: {'Sim' if hf_token else 'Não'}")
             if not hf_token:
-                print("HF_TOKEN não encontrado, usando template")
                 return None
             
             # Importação dinâmica para evitar erros de linter
@@ -207,15 +205,13 @@ class FreeAIService:
                         temperature=0.7
                     )
                     
-                    result = response.choices[0].message.content.strip()
-                    # print(f"Resposta gerada com sucesso usando modelo: {model}")  # Log reduzido
+                    result = response.choices[0].message.content.strip()                    
                     return result
                     
                 except Exception as e:
                     error_msg = str(e).lower()
                     if "rate limit" in error_msg or "429" in error_msg:
-                        # print(f"Limite de taxa atingido para {model}. Tentando com menos tokens...")  # Log reduzido
-                        # Tentar com menos tokens em caso de limite de taxa
+                        
                         try:
                             response = client.chat.completions.create(
                                 model=model,
@@ -224,16 +220,13 @@ class FreeAIService:
                                 temperature=0.7
                             )
                             result = response.choices[0].message.content.strip()
-                            # print(f"Resposta gerada com sucesso (reserva) usando modelo: {model}")  # Log reduzido
                             return result
                         except Exception as fallback_error:
                             print(f" Reserva também falhou para {model}: {fallback_error}")
                     else:
                         print(f" Modelo {model} falhou: {e}")
                     continue
-            
-            # Se nenhum modelo funcionar
-            print(" Todos os modelos de geração do Hugging Face falharam")
+                      
             return None
             
         except Exception as e:
@@ -242,7 +235,7 @@ class FreeAIService:
 
 
     def _generate_unproductive_response(self, email_content: str) -> str:
-        """Gerar resposta corporativa educada mas firme para emails improdutivos baseada em categorias detectadas"""
+        """Gerar resposta corporativa educada, mas firme para emails improdutivos baseada em categorias detectadas"""
         
         # Detectar categoria improdutiva específica
         content_lower = email_content.lower()

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, FileText, Send, Loader2 } from 'lucide-react';
-import { emailService } from '../services';
+import { emailService } from '../../services';
 
 interface ClassificationResult {
   email: {
@@ -35,7 +35,7 @@ interface UploadSectionProps {
   setIsLoading: (loading: boolean) => void;
 }
 
-export const UploadSection: React.FC<UploadSectionProps> = ({ 
+const UploadSection: React.FC<UploadSectionProps> = ({ 
   onClassificationComplete, 
   isLoading, 
   setIsLoading 
@@ -285,3 +285,5 @@ export const UploadSection: React.FC<UploadSectionProps> = ({
     </div>
   );
 };
+
+export default UploadSection;

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
 Gerenciador de banco de dados
-Permite criar, migrar e gerenciar o banco de dados
 """
 
 import sys
@@ -21,44 +20,44 @@ from models.historico import Historico
 
 def init_database():
     """Inicializa o banco de dados criando todas as tabelas"""
-    print("Inicializando banco de dados...")
+   #  print("Inicializando banco de dados...")
     try:
         create_tables()
-        print("Banco de dados inicializado com sucesso!")
+       # print("Banco de dados inicializado com sucesso!")
         return True
     except Exception as e:
-        print(f"Erro ao inicializar banco de dados: {e}")
+       # print(f"Erro ao inicializar banco de dados: {e}")
         return False
 
 def reset_database():
     """Reseta o banco de dados (remove e recria todas as tabelas)"""
-    print("Resetando banco de dados...")
+    # print("Resetando banco de dados...")
     try:
         drop_tables()
         create_tables()
-        print("Banco de dados resetado com sucesso!")
+        # print("Banco de dados resetado com sucesso!")
         return True
     except Exception as e:
-        print(f" Erro ao resetar banco de dados: {e}")
+        # print(f" Erro ao resetar banco de dados: {e}")
         return False
 
 def check_database_connection():
     """Verifica se a conexão com o banco de dados está funcionando"""
-    print("Verificando conexão com banco de dados...")
+    # print("Verificando conexão com banco de dados...")
     try:
         with engine.connect() as connection:
             result = connection.execute(text("SELECT 1"))
-            print("Conexão com banco de dados estabelecida!")
+            # print("Conexão com banco de dados estabelecida!")
             return True
     except Exception as e:
-        print(f" Erro na conexão com banco de dados: {e}")
+        # print(f" Erro na conexão com banco de dados: {e}")
         return False
 
 def show_database_info():
     """Mostra informações sobre o banco de dados"""
-    print("Informações do banco de dados:")
-    print(f"   URL: {engine.url}")
-    print(f"   Driver: {engine.url.drivername}")
+    # print("Informações do banco de dados:")
+    # print(f"   URL: {engine.url}")
+    # print(f"   Driver: {engine.url.drivername}")
     
     try:
         with engine.connect() as connection:
@@ -71,13 +70,14 @@ def show_database_info():
             else:
                 tables = ["Informação não disponível"]
             
-            print(f"   Tabelas existentes: {', '.join(tables) if tables else 'Nenhuma'}")
+            #   print(f"   Tabelas existentes: {', '.join(tables) if tables else 'Nenhuma'}")
     except Exception as e:
-        print(f"   Erro ao obter informações: {e}")
+        # print(f"   Erro ao obter informações: {e}")
+        pass
 
 def create_sample_data():
     """Cria dados de exemplo para teste"""
-    print("📝 Criando dados de exemplo...")
+    # print("📝 Criando dados de exemplo...")
     try:
         db = SessionLocal()
         
@@ -107,25 +107,25 @@ def create_sample_data():
         db.add(sample_classification)
         db.commit()
         
-        print("Dados de exemplo criados com sucesso!")
+        # print("Dados de exemplo criados com sucesso!")
         return True
         
     except Exception as e:
-        print(f" Erro ao criar dados de exemplo: {e}")
+        # print(f" Erro ao criar dados de exemplo: {e}")
         return False
     finally:
         db.close()
 
 def seed_prompts_templates():
     """Popula as tabelas de prompts e templates com dados iniciais"""
-    print("Populando prompts e templates...")
+    # print("Populando prompts e templates...")
     try:
         from seed_prompts_templates import main as seed_main
         seed_main()
-        print("Prompts e templates populados com sucesso!")
+        # print("Prompts e templates populados com sucesso!")
         return True
     except Exception as e:
-        print(f" Erro ao popular prompts e templates: {e}")
+        # print(f" Erro ao popular prompts e templates: {e}")
         return False
 
 def main():

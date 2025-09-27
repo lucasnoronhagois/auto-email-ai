@@ -30,11 +30,18 @@ if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
     debug = os.getenv("DEBUG", "True").lower() == "true"
     
-    print(f"Iniciando Auto Server...")
-    print(f"Host: {host}")
-    print(f"Port: {port}")
-    print(f"Debug: {debug}")
-    print(f"Docs: http://{host}:{port}/docs")
+    # Logs mínimos para produção
+    environment = os.getenv("ENVIRONMENT", "development")
+    
+    if environment == "development":
+        print(f"Iniciando Auto Server...")
+        print(f"Host: {host}")
+        print(f"Port: {port}")
+        print(f"Debug: {debug}")
+        print(f"Docs: http://{host}:{port}/docs")
+    else:
+        # Em produção, apenas log essencial
+        print("Auto Server iniciado")
     
     uvicorn.run(
         app,  # Passa o app diretamente em vez de string

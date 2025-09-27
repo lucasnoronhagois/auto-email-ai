@@ -1,6 +1,6 @@
 import React from 'react';
 import { CheckCircle, XCircle, Clock, Brain, Copy, RefreshCw } from 'lucide-react';
-import { translateSubcategory } from '../utils/subcategoryTranslations';
+import { translateSubcategory } from '../../utils/subcategoryTranslations';
 
 interface ClassificationResult {
   email: {
@@ -33,7 +33,7 @@ interface ResultsSectionProps {
   result: ClassificationResult;
 }
 
-export const ResultsSection: React.FC<ResultsSectionProps> = ({ result }) => {
+const ResultsSection: React.FC<ResultsSectionProps> = ({ result }) => {
   const { email, classification } = result;
   
   const isProductive = classification.category === 'Produtivo';
@@ -174,3 +174,5 @@ export const ResultsSection: React.FC<ResultsSectionProps> = ({ result }) => {
     </div>
   );
 };
+
+export default ResultsSection;

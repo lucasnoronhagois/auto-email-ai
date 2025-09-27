@@ -12,9 +12,9 @@ HUGGINGFACE_GENERATION_MODELS = [
     "meta-llama/Llama-3.2-1B"              # 1B - versão base
 ]
 
-# Configurações padrão para Hugging Face
+# Configurações para Hugging Face
 HUGGINGFACE_DEFAULT_CONFIG = {
-    "max_tokens": 500,  # Balanceado: respostas completas sem exceder limites
+    "max_tokens": 500,  # Balanceado: respostas completas sem exceder limites (economia de tokens)
     "temperature": 0.7,
     "base_url": "https://router.huggingface.co/v1"
 }

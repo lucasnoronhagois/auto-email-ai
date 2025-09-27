@@ -1,5 +1,6 @@
 """
 Templates para emails improdutivos organizados por categoria
+Cai como fallback se não for possível gerar resposta com IA
 """
 
 UNPRODUCTIVE_TEMPLATES = {

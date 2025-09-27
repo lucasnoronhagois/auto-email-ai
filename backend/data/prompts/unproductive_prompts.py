@@ -1,5 +1,6 @@
 """
 Prompts para emails improdutivos organizados por categoria
+Só usa se o banco por alguma razão não estiver funcionando
 """
 
 UNPRODUCTIVE_PROMPTS = {

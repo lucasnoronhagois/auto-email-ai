@@ -1,5 +1,6 @@
 """
-Templates para emails produtivos organizados por tópico
+Templates para emails produtivos organizados por tópico 
+Cai como fallback se não for possível gerar resposta com IA
 """
 
 PRODUCTIVE_TEMPLATES = {

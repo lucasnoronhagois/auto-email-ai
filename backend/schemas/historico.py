@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from models.historico import ActionType
+from ..models.historico import ActionType
 
 class HistoricoBase(BaseModel):
     email_id: int

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from models.prompt import PromptType, PromptCategory, PromptSubcategory
+from ..models.prompt import PromptType, PromptCategory, PromptSubcategory
 
 class PromptBase(BaseModel):
     type: PromptType

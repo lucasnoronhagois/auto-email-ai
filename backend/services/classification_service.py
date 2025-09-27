@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.classification import Classification
-from schemas.classification import ClassificationCreate
+from ..models.classification import Classification
+from ..schemas.classification import ClassificationCreate
 from typing import List, Optional
 
 class ClassificationService:

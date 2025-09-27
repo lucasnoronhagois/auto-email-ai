@@ -3,13 +3,13 @@ import os
 import random
 from typing import Dict, Optional
 import time
-from data.keywords import BUSINESS_TOPICS, UNPRODUCTIVE_CATEGORIES
-from data.prompts import PRODUCTIVE_PROMPTS, UNPRODUCTIVE_PROMPTS
-from data.templates import (
+from ..data.keywords import BUSINESS_TOPICS, UNPRODUCTIVE_CATEGORIES
+from ..data.prompts import PRODUCTIVE_PROMPTS, UNPRODUCTIVE_PROMPTS
+from ..data.templates import (
     PRODUCTIVE_TEMPLATES, GENERIC_PRODUCTIVE_TEMPLATES,
     UNPRODUCTIVE_TEMPLATES, GENERIC_UNPRODUCTIVE_TEMPLATES
 )
-from data.ai_models import HUGGINGFACE_GENERATION_MODELS
+from ..data.ai_models import HUGGINGFACE_GENERATION_MODELS
 from .simple_context_classification import SimpleContextClassification
 from .hybrid_prompt_service import HybridPromptService
 

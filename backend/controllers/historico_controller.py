@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from config.database import get_db
-from services.historico_service import HistoricoService
-from schemas.historico import HistoricoWithDetails
+from ..config.database import get_db
+from ..services.historico_service import HistoricoService
+from ..schemas.historico import HistoricoWithDetails
 from typing import List
 
 router = APIRouter()

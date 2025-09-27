@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from models.email import Email
-from schemas.email import EmailCreate
+from ..models.email import Email
+from ..schemas.email import EmailCreate
 from typing import List, Optional
 
 class EmailService:

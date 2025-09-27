@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from models.prompt import Prompt, PromptType, PromptCategory
-from schemas.prompt import PromptCreate, PromptUpdate
+from ..models.prompt import Prompt, PromptType, PromptCategory
+from ..schemas.prompt import PromptCreate, PromptUpdate
 from typing import List, Optional
 
 class PromptService:

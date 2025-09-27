@@ -1,17 +1,10 @@
-import os
-import sys
-
-# Adiciona o diretório atual ao Python path para resolver imports
-current_dir = os.path.dirname(os.path.abspath(__file__))
-if current_dir not in sys.path:
-    sys.path.insert(0, current_dir)
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from config.database import engine, Base, create_tables
 from controllers.email_controller import router as email_router
 from controllers.historico_controller import router as historico_router
 from controllers.prompt_controller import router as prompt_router
+import os
 
 # Create database tables on startup
 create_tables()

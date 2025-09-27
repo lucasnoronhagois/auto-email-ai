@@ -5,8 +5,8 @@ Prioridade: Banco > Arquivos Locais > Genérico
 
 from sqlalchemy.orm import Session
 from typing import Dict, Optional, List
-from ..models.prompt import Prompt, PromptType, PromptCategory
-from ..data.prompts import PRODUCTIVE_PROMPTS, UNPRODUCTIVE_PROMPTS
+from models.prompt import Prompt, PromptType, PromptCategory
+from data.prompts import PRODUCTIVE_PROMPTS, UNPRODUCTIVE_PROMPTS
 import time
 
 class HybridPromptService:

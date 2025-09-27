@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from ..config.database import get_db
-from ..services.prompt_service import PromptService
-from ..services.hybrid_prompt_service import HybridPromptService
-from ..schemas.prompt import PromptCreate, PromptUpdate, PromptResponse
-from ..models.prompt import PromptType, PromptCategory, PromptSubcategory
+from config.database import get_db
+from services.prompt_service import PromptService
+from services.hybrid_prompt_service import HybridPromptService
+from schemas.prompt import PromptCreate, PromptUpdate, PromptResponse
+from models.prompt import PromptType, PromptCategory, PromptSubcategory
 from typing import List, Optional
 
 router = APIRouter()

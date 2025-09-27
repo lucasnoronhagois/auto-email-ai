@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
-from ..models.template import TemplateType, TemplateCategory
+from models.template import TemplateType, TemplateCategory
 
 class TemplateBase(BaseModel):
     type: TemplateType

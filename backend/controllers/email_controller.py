@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from sqlalchemy.orm import Session
-from ..config.database import get_db
-from ..services.email_service import EmailService
-from ..services.classification_service import ClassificationService
-from ..services.nlp_service import NLPService
-from ..services.ai_service import AIService
-from ..services.file_service import FileService
-from ..services.historico_service import HistoricoService
-from ..schemas.email import EmailCreate, EmailResponse
-from ..schemas.classification import ClassificationCreate, EmailClassificationResponse
-from ..schemas.historico import HistoricoWithDetails
+from config.database import get_db
+from services.email_service import EmailService
+from services.classification_service import ClassificationService
+from services.nlp_service import NLPService
+from services.ai_service import AIService
+from services.file_service import FileService
+from services.historico_service import HistoricoService
+from schemas.email import EmailCreate, EmailResponse
+from schemas.classification import ClassificationCreate, EmailClassificationResponse
+from schemas.historico import HistoricoWithDetails
 from typing import Optional
 import time
 

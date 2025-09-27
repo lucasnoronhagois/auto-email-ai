@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
-from ..models.historico import Historico, ActionType
-from ..schemas.historico import HistoricoCreate, HistoricoWithDetails
+from models.historico import Historico, ActionType
+from schemas.historico import HistoricoCreate, HistoricoWithDetails
 from typing import List, Optional
 
 class HistoricoService:

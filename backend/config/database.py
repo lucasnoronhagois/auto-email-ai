@@ -10,6 +10,21 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./autou.db")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 
+# Debug: mostrar a DATABASE_URL (sem senha)
+if DATABASE_URL:
+    # Mascarar a senha para debug
+    masked_url = DATABASE_URL
+    if "@" in DATABASE_URL and ":" in DATABASE_URL:
+        parts = DATABASE_URL.split("@")
+        if len(parts) == 2:
+            user_pass = parts[0].split("//")[-1]
+            if ":" in user_pass:
+                user = user_pass.split(":")[0]
+                masked_url = DATABASE_URL.replace(user_pass, f"{user}:***")
+    print(f"Database URL: {masked_url}")
+else:
+    print("DATABASE_URL não encontrada, usando SQLite")
+
 # Configurações específicas para cada tipo de banco
 if "sqlite" in DATABASE_URL:
     # SQLite para desenvolvimento local

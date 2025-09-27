@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+const API_BASE_URL = 'https://precious-luck-production.up.railway.app/api';
 
 // Debug: verificar se a variável está sendo lida
 console.log('API_BASE_URL:', API_BASE_URL);

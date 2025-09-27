@@ -37,13 +37,26 @@ if DATABASE_URL:
             DATABASE_URL = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}"
             print(f"Usando variáveis individuais: postgresql://{pg_user}:***@{pg_host}:{pg_port}/{pg_database}")
         else:
-            print("Variáveis individuais não encontradas, tentando corrigir localhost")
-            # Tentar substituir localhost por um host válido
-            # Railway geralmente usa um host interno
-            if "localhost" in DATABASE_URL:
-                # Manter a URL original mas tentar conectar mesmo assim
-                print("Mantendo DATABASE_URL original, pode falhar se localhost não for acessível")
-                # DATABASE_URL permanece inalterada
+            print("Variáveis individuais não encontradas")
+            print("Verificando outras variáveis do Railway...")
+            
+            # Tentar usar variáveis específicas do Railway
+            railway_db_url = os.getenv("RAILWAY_DATABASE_URL")
+            if railway_db_url:
+                DATABASE_URL = railway_db_url
+                print(f"Usando RAILWAY_DATABASE_URL: {railway_db_url[:50]}...")
+            else:
+                # Se não encontrar variáveis específicas, tentar substituir localhost
+                # Railway pode usar um host interno diferente
+                if "localhost" in DATABASE_URL:
+                    # Tentar substituir localhost por um host que funcione no Railway
+                    # Railway geralmente usa um host interno como o nome do serviço
+                    service_name = os.getenv("RAILWAY_SERVICE_NAME", "postgres")
+                    corrected_url = DATABASE_URL.replace("localhost", service_name)
+                    DATABASE_URL = corrected_url
+                    print(f"Tentando corrigir localhost para {service_name}: {corrected_url[:50]}...")
+                else:
+                    print("Mantendo DATABASE_URL original")
 else:
     print("DATABASE_URL não encontrada, usando SQLite")
     DATABASE_URL = "sqlite:///./autou.db"

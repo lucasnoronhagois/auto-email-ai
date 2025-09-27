@@ -22,6 +22,23 @@ if DATABASE_URL:
                 user = user_pass.split(":")[0]
                 masked_url = DATABASE_URL.replace(user_pass, f"{user}:***")
     print(f"Database URL: {masked_url}")
+    
+    # Se a URL contém localhost, tentar usar variáveis individuais do Railway
+    if "localhost" in DATABASE_URL:
+        print("Detectado localhost na DATABASE_URL, tentando usar variáveis individuais")
+        # Railway fornece variáveis individuais para PostgreSQL
+        pg_host = os.getenv("PGHOST")
+        pg_port = os.getenv("PGPORT", "5432")
+        pg_user = os.getenv("PGUSER")
+        pg_password = os.getenv("PGPASSWORD")
+        pg_database = os.getenv("PGDATABASE")
+        
+        if all([pg_host, pg_user, pg_password, pg_database]):
+            DATABASE_URL = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}"
+            print(f"Usando variáveis individuais: postgresql://{pg_user}:***@{pg_host}:{pg_port}/{pg_database}")
+        else:
+            print("Variáveis individuais não encontradas, usando SQLite como fallback")
+            DATABASE_URL = "sqlite:///./autou.db"
 else:
     print("DATABASE_URL não encontrada, usando SQLite")
 

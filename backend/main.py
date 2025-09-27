@@ -53,6 +53,26 @@ async def root():
 async def health_check():
     return {"status": "healthy"}
 
+@app.post("/api/seed")
+async def seed_database():
+    """Endpoint para popular o banco com dados iniciais"""
+    try:
+        from seed_prompts_templates import seed_prompts, seed_templates
+        
+        # Executar seed
+        seed_prompts()
+        seed_templates()
+        
+        return {
+            "message": "Banco de dados populado com sucesso!",
+            "status": "success"
+        }
+    except Exception as e:
+        return {
+            "message": f"Erro ao popular banco: {str(e)}",
+            "status": "error"
+        }
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)

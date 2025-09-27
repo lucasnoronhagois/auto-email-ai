@@ -26,6 +26,6 @@ if __name__ == "__main__":
         "main:app",
         host=host,
         port=port,
-        reload=debug,
-        log_level="warning"  # Reduzido para menos logs
+        reload=False,  # Desabilitar reload em produção
+        log_level="info"
     )

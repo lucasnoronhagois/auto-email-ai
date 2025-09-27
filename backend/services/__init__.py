@@ -8,7 +8,6 @@ from .prompt_service import PromptService
 from .hybrid_prompt_service import HybridPromptService
 from .free_ai_service import FreeAIService
 from .simple_context_classification import SimpleContextClassification
-from .user_service import UserService
 
 __all__ = [
     "EmailService", 
@@ -20,6 +19,5 @@ __all__ = [
     "PromptService",
     "HybridPromptService",
     "FreeAIService",
-    "SimpleContextClassification",
-    "UserService"
+    "SimpleContextClassification"
 ]

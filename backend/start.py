@@ -12,6 +12,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.insert(0, current_dir)
 
+# Força a configuração do path para todos os imports
+os.environ['PYTHONPATH'] = current_dir
+
 # Importa e executa o app
 if __name__ == "__main__":
     import uvicorn

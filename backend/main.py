@@ -10,9 +10,13 @@ import os
 create_tables()
 
 # Configurar documentação baseada no ambiente
-ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "production")  # Default para production
 docs_url = "/docs" if ENVIRONMENT == "development" else None
 redoc_url = "/redoc" if ENVIRONMENT == "development" else None
+
+# Debug: mostrar o ambiente (remover depois)
+print(f"Environment: {ENVIRONMENT}")
+print(f"Docs URL: {docs_url}")
 
 app = FastAPI(
     title="Auto Email Classification API",

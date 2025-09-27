@@ -180,7 +180,9 @@ class FreeAIService:
         try:
             # Verificar se temos token
             hf_token = os.getenv("HF_TOKEN")
+            print(f"HF_TOKEN encontrado: {'Sim' if hf_token else 'Não'}")
             if not hf_token:
+                print("HF_TOKEN não encontrado, usando template")
                 return None
             
             # Importação dinâmica para evitar erros de linter

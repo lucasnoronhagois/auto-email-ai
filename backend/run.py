@@ -16,6 +16,9 @@ if current_dir not in sys.path:
 # Carrega variáveis de ambiente
 load_dotenv()
 
+# Importa o app diretamente após configurar o path
+from main import app
+
 if __name__ == "__main__":
     # Configurações do servidor
     host = os.getenv("HOST", "0.0.0.0")
@@ -29,7 +32,7 @@ if __name__ == "__main__":
     print(f"Docs: http://{host}:{port}/docs")
     
     uvicorn.run(
-        "main:app",
+        app,  # Passa o app diretamente em vez de string
         host=host,
         port=port,
         reload=False,  # Desabilitar reload em produção

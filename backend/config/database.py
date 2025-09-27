@@ -37,10 +37,16 @@ if DATABASE_URL:
             DATABASE_URL = f"postgresql://{pg_user}:{pg_password}@{pg_host}:{pg_port}/{pg_database}"
             print(f"Usando variáveis individuais: postgresql://{pg_user}:***@{pg_host}:{pg_port}/{pg_database}")
         else:
-            print("Variáveis individuais não encontradas, usando SQLite como fallback")
-            DATABASE_URL = "sqlite:///./autou.db"
+            print("Variáveis individuais não encontradas, tentando corrigir localhost")
+            # Tentar substituir localhost por um host válido
+            # Railway geralmente usa um host interno
+            if "localhost" in DATABASE_URL:
+                # Manter a URL original mas tentar conectar mesmo assim
+                print("Mantendo DATABASE_URL original, pode falhar se localhost não for acessível")
+                # DATABASE_URL permanece inalterada
 else:
     print("DATABASE_URL não encontrada, usando SQLite")
+    DATABASE_URL = "sqlite:///./autou.db"
 
 # Configurações específicas para cada tipo de banco
 if "sqlite" in DATABASE_URL:

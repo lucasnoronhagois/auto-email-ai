@@ -332,7 +332,7 @@ dist/
 *.h5
 *.hdf5
 *.model
-models/
+# models/  # Comentado - precisamos do diretório models/ para o código Python
 *.bin
 *.safetensors
 

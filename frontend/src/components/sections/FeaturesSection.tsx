@@ -77,10 +77,10 @@ const FeaturesSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Por que escolher nossa solução?
+            Como a solução funciona
           </h2>
           <p className="text-white/80 text-lg max-w-3xl mx-auto">
-            Uma plataforma completa para classificação inteligente de e-mails com IA avançada
+            Principais conceitos que tornam a classificação inteligente possível
           </p>
         </div>
 

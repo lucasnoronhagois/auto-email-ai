@@ -131,18 +131,7 @@ const LandingPage: React.FC = () => {
     
     setIsGeneratingNewResponse(true);
     try {
-      // Try the new regenerate endpoint first
-      try {
-        const result = await emailService.regenerateEmailResponse(classificationResult.email.id);
-        if (result) {
-          setClassificationResult(result);
-          return;
-        }
-      } catch (regenerateError) {
-        
-      }
-     
-      const result = await emailService.uploadTextEmail({
+        const result = await emailService.uploadTextEmail({
         content: emailContent,
         subject: emailSubject,
         sender: emailSender,

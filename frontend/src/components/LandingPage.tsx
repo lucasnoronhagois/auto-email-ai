@@ -131,11 +131,22 @@ const LandingPage: React.FC = () => {
     
     setIsGeneratingNewResponse(true);
     try {
-        const result = await emailService.uploadTextEmail({
-        content: emailContent,
-        subject: emailSubject,
-        sender: emailSender,
-        recipient: emailRecipient
+      // Determine content based on upload type
+      let content = '';
+      if (uploadType === 'text') {
+        content = emailContent;
+      } else if (selectedFile) {
+        content = await selectedFile.text();
+      } else {
+        // Fallback to original content from classification result
+        content = classificationResult.email.content;
+      }
+
+      const result = await emailService.uploadTextEmail({
+        content,
+        subject: emailSubject || classificationResult.email.subject,
+        sender: emailSender || classificationResult.email.sender,
+        recipient: emailRecipient || classificationResult.email.recipient
       });
       
       if (result) {

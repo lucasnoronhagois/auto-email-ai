@@ -131,9 +131,8 @@ const LandingPage: React.FC = () => {
     
     setIsGeneratingNewResponse(true);
     try {
-      // For now, we'll just reload the email with classification
-      // This endpoint might need to be implemented in the backend
-      const result = await emailService.getEmailWithClassification(classificationResult.email.id);
+      // Use the new regenerate endpoint to get a fresh response
+      const result = await emailService.regenerateEmailResponse(classificationResult.email.id);
       if (result) {
         setClassificationResult(result);
       }

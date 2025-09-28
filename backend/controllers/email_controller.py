@@ -189,3 +189,51 @@ async def get_email_with_classification(
         },
         classification=classification
     )
+
+@router.post("/emails/{email_id}/regenerate-response", response_model=EmailClassificationResponse)
+async def regenerate_email_response(
+    email_id: int,
+    db: Session = Depends(get_db)
+):
+    """Regenerar resposta sugerida para um email já classificado"""
+    try:
+        email_service = EmailService(db)
+        classification_service = ClassificationService(db)
+        ai_service = AIService(db)
+        
+        # Buscar email
+        email = email_service.get_email(email_id)
+        if not email:
+            raise HTTPException(status_code=404, detail="Email não encontrado")
+        
+        # Buscar classificação existente
+        classification = classification_service.get_classification_by_email(email_id)
+        if not classification:
+            raise HTTPException(status_code=404, detail="Classificação não encontrada")
+        
+        # Gerar nova resposta usando o conteúdo original do email e a mesma categoria
+        new_response = ai_service.generate_response(email.content, classification.category)
+        
+        # Atualizar a classificação com a nova resposta
+        classification.suggested_response = new_response
+        db.commit()
+        db.refresh(classification)
+        
+        return EmailClassificationResponse(
+            email={
+                "id": email.id,
+                "subject": email.subject,
+                "content": email.content,
+                "sender": email.sender,
+                "recipient": email.recipient,
+                "file_name": email.file_name,
+                "file_type": email.file_type,
+                "is_deleted": email.is_deleted,
+                "created_at": email.created_at,
+                "updated_at": email.updated_at
+            },
+            classification=classification
+        )
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Erro ao regenerar resposta: {str(e)}")

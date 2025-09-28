@@ -111,4 +111,9 @@ export const emailService = {
     const response = await api.get(`/emails/${emailId}`);
     return response.data;
   },
+
+  async regenerateEmailResponse(emailId: number): Promise<ClassificationResult> {
+    const response = await api.post(`/emails/${emailId}/regenerate-response`);
+    return response.data;
+  },
 };
